@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="数据、产品、增长与内容作品集" />
+    <meta name="robots" content="noindex, nofollow, noarchive" />
+    <meta name="theme-color" content="#f5ede2" />
+    <title>Lai Shimin | Portfolio</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%23f5ede2'/%3E%3Ctext x='32' y='43' text-anchor='middle' font-size='32' fill='%23414840'%3EK%3C/text%3E%3C/svg%3E" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Noto+Serif+SC:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;1,400&family=Plus+Jakarta+Sans:wght@300;400;500&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'" />
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&family=Noto+Serif+SC:wght@400;500&display=swap" rel="stylesheet" /><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" /></noscript>
+    <script src="assets/vendor/gsap/gsap.min.js"></script>
+    <script src="assets/vendor/gsap/ScrollTrigger.min.js"></script>
+    <script>if (window.gsap && window.ScrollTrigger) gsap.registerPlugin(ScrollTrigger);</script>
+    <script src="portfolio-system.js?v=20260716-10"></script>
+
+    <style>
+        :root {
+            --paper-top: #EDE5D5; --paper-bottom: #E6DAC8; --paper-left: #DDD0BE; --paper-right: #DAD0BC; --paper-inside: #EDE5D5;
+            --text-dark: #322c27; --text-gold: #b39b82; --text-light: #8c857f; --bg-color: #fdfcf9;
+            --noise-texture: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+        }
+
+        * { box-sizing: border-box; }
+
+        body, html {
+            margin: 0; padding: 0; width: 100%; min-height: 100%;
+            font-family: 'Cormorant Garamond', 'Noto Serif SC', serif;
+            overflow-x: hidden; overflow-y: auto; color: var(--text-dark); background-color: #f7f6f2;
+        }
+
+        #fullpage-wrapper {
+            width: 100%; height: auto;
+            transform: none !important;
+            transition: none !important;
+        }
+
+        .page-section { width: 100%; height: auto; min-height: 100vh; position: relative; overflow: visible; }
+        .page-section.section-1 { height: 100vh; overflow: hidden; }
+
+        .internal-scroll { height: auto !important; overflow: visible !important; }
+        .internal-scroll::-webkit-scrollbar { width: 0px; background: transparent; }
+
+        .page-header-text { position: absolute; top: 40px; right: 50px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 9px; letter-spacing: 5px; color: var(--text-light); text-transform: uppercase; z-index: 5; }
+
+        .page-nav-dots { position: fixed; right: 28px; top: 50%; transform: translateY(-50%); z-index: 20; display: flex; flex-direction: column; gap: 13px; }
+        .page-dot { width: 7px; height: 7px; border-radius: 50%; border: 1px solid rgba(179, 155, 130, 0.65); background: transparent; padding: 0; cursor: pointer; transition: all 0.3s ease; }
+        .page-dot.active { height: 22px; border-radius: 999px; background: var(--text-gold); }
+
+        .reveal { opacity: 0; transform: translateY(34px); transition: opacity 0.85s ease, transform 0.85s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        .no-transition { transition: none !important; }
+
+        /* Keep the retired cover state out of the first paint. */
+        body.portfolio-loading #fullpage-wrapper,
+        body.portfolio-loading .page-nav-dots,
+        body.portfolio-loading .pf-page-status {
+            opacity: 0 !important;
+        }
+        body.portfolio-loading .envelope-wrapper,
+        body.portfolio-loading .envelope-wrapper * {
+            animation-play-state: paused !important;
+        }
+        body.portfolio-ready #fullpage-wrapper,
+        body.portfolio-ready .page-nav-dots,
+        body.portfolio-ready .pf-page-status {
+            opacity: 1;
+            transition: opacity .18s ease;
+        }
+
+        .scroll-down-hint, .scroll-up-btn { position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%); font-family: 'Plus Jakarta Sans', sans-serif; font-size: 9px; letter-spacing: 3px; color: var(--text-light); text-transform: uppercase; display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; z-index: 10; opacity: 0.55; transition: opacity 0.3s; user-select: none; }
+        .scroll-down-hint:hover, .scroll-up-btn:hover { opacity: 1; }
+        .scroll-down-hint i { font-size: 11px; animation: nudgeDown 2s ease-in-out infinite; }
+        .scroll-up-btn i { font-size: 12px; animation: nudgeUp 2s infinite; }
+        @keyframes nudgeDown { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
+        @keyframes nudgeUp { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+
+        .work-actions { position: absolute; left: 50%; bottom: 34px; transform: translateX(-50%); display: flex; align-items: center; gap: 22px; z-index: 8; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 9px; letter-spacing: 3px; color: var(--text-light); text-transform: uppercase; }
+        .work-actions button { border: 0; background: transparent; color: inherit; cursor: pointer; font: inherit; letter-spacing: inherit; display: flex; align-items: center; gap: 8px; opacity: 0.62; transition: opacity 0.25s ease, color 0.25s ease; }
+        .work-actions button:hover { opacity: 1; color: var(--text-dark); }
+
+        @media (max-width: 980px) {
+            body, html { overflow: auto; }
+            #fullpage-wrapper { height: auto; transform: none !important; transition: none; }
+            .page-section { min-height: 100vh; height: auto; }
+            .page-nav-dots, .scroll-down-hint, .scroll-up-btn, .work-actions { display: none !important; }
+        }
+    </style>
+    <link rel="stylesheet" href="portfolio-system.css?v=20260716-5" />
+</head>
+
+<body class="portfolio-loading">
+
+    <div id="fullpage-wrapper"></div>
+
+    <div class="pf-page-status" aria-hidden="true">
+        <span><b id="pfCurrentPage">01</b> / 07</span>
+        <span class="pf-status-line"></span>
+    </div>
+
+    <div class="pf-transition-line" aria-hidden="true"></div>
+
+    <div class="page-nav-dots" aria-label="页面导航">
+        <button class="page-dot active" data-page="0" data-label="封面" aria-label="封面"></button>
+        <button class="page-dot" data-page="1" data-label="关于我" aria-label="关于我"></button>
+        <button class="page-dot" data-page="2" data-label="数据分析" aria-label="数据分析"></button>
+        <button class="page-dot" data-page="3" data-label="产品与项目" aria-label="产品与项目"></button>
+        <button class="page-dot" data-page="4" data-label="FaceBeauty" aria-label="FaceBeauty 项目"></button>
+        <button class="page-dot" data-page="5" data-label="用户增长" aria-label="用户增长"></button>
+        <button class="page-dot" data-page="6" data-label="内容作品" aria-label="内容作品"></button>
+    </div>
+
+    <script>
+        async function loadPortfolioSections() {
+            const wrapper = document.getElementById('fullpage-wrapper');
+            // 按顺序插入所有页面，包含 Facebeauty
+            const files = ['letter.html', 'me.html', 'data.html', 'product.html', 'Facebeauty.html', 'growth.html', 'content.html'];
+
+            const fragments = await Promise.all(files.map(async file => {
+                try {
+                    const resp = await fetch(file);
+                    return await resp.text();
+                } catch (err) {
+                    console.error('加载失败，请使用 Live Server 运行:', file, err);
+                    return '';
+                }
+            }));
+            fragments.forEach(html => {
+                if (html) wrapper.insertAdjacentHTML('beforeend', html);
+            });
+
+            // 执行注入的 JS 脚本
+            const scripts = wrapper.querySelectorAll('script');
+            scripts.forEach(oldScript => {
+                const newScript = document.createElement('script');
+                Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
+                newScript.innerHTML = oldScript.innerHTML;
+                document.body.appendChild(newScript);
+                oldScript.remove();
+            });
+
+            await new Promise(resolve => {
+                const link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.href = 'portfolio-refinement.css?v=20260716-10';
+                link.onload = resolve;
+                link.onerror = resolve;
+                document.body.appendChild(link);
+            });
+
+            try {
+                if (typeof window.initPortfolioSystem === 'function') window.initPortfolioSystem();
+                else document.documentElement.classList.add('pf-continuous');
+            } catch (error) {
+                console.error('Portfolio interaction initialization failed:', error);
+                document.documentElement.classList.add('pf-continuous');
+            } finally {
+                const deepSection = new URLSearchParams(location.search).get('section') || location.hash.slice(1);
+                if (deepSection) {
+                    const jumpToDeepSection = () => {
+                        const target = document.getElementById(deepSection);
+                        if (!target) return;
+                        const y = target.getBoundingClientRect().top + window.scrollY - Math.min(48, innerHeight * .04);
+                        const root = document.documentElement;
+                        const previousScrollBehavior = root.style.scrollBehavior;
+                        root.style.scrollBehavior = 'auto';
+                        window.scrollTo(0, Math.max(0, y));
+                        requestAnimationFrame(() => requestAnimationFrame(() => {
+                            root.style.scrollBehavior = previousScrollBehavior;
+                            if (window.ScrollTrigger) {
+                                ScrollTrigger.update();
+                            }
+                            window.portfolioRevealVisible?.();
+                            window.dispatchEvent(new Event('scroll'));
+                        }));
+                        window.setTimeout(() => window.portfolioRevealVisible?.(), 120);
+                    };
+                    jumpToDeepSection();
+                    window.setTimeout(jumpToDeepSection, 500);
+                    window.setTimeout(jumpToDeepSection, 1600);
+                    window.setTimeout(jumpToDeepSection, 3200);
+                }
+                requestAnimationFrame(() => requestAnimationFrame(() => {
+                    document.body.classList.remove('portfolio-loading');
+                    document.body.classList.add('portfolio-ready');
+                }));
+            }
+        }
+
+        loadPortfolioSections();
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}), { once: true });
+        }
+    </script>
+</body>
+</html>

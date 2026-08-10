@@ -1,0 +1,1253 @@
+<style>
+    .content-page {
+        --c-ink: #2f3b36;
+        --c-paper: #fffdf8;
+        --c-card: #fbf8f1;
+        --c-sage: #89a990;
+        --c-gold: #b29372;
+        --c-line: rgba(52,58,54,.13);
+        --c-progress: 0;
+        position: relative;
+        height: 100vh;
+        overflow-x: hidden;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        color: var(--c-ink);
+        background:
+            radial-gradient(circle at var(--mx, 72%) var(--my, 18%), rgba(229,240,230,.48), transparent 20rem),
+            radial-gradient(circle at 14% 72%, rgba(247,232,232,.36), transparent 20rem),
+            var(--c-paper);
+        scrollbar-width: thin;
+        scrollbar-color: var(--c-sage) transparent;
+    }
+
+    .content-page * { box-sizing: border-box; }
+    .content-page button { font: inherit; }
+
+    .content-page::before { display:none; }
+
+    .content-shell {
+        width: min(100% - 72px, 1460px);
+        margin: 0 auto;
+    }
+
+    .content-progress {
+        position: fixed;
+        z-index: 30;
+        top: 0;
+        left: 0;
+        width: calc(var(--c-progress) * 100%);
+        height: 3px;
+        background: var(--c-sage);
+        pointer-events: none;
+    }
+
+    .content-hero {
+        min-height: 100vh;
+        padding: 38px 0 40px;
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+    }
+
+    .content-hero-top,
+    .content-gallery-head,
+    .content-end-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        padding-bottom: 18px;
+        border-bottom: 1px solid var(--c-line);
+        font-size: 11px;
+        line-height: 1;
+        letter-spacing: .22em;
+        text-transform: uppercase;
+    }
+
+    .content-hero-top strong { font-weight: 600; }
+    .content-hero-top span:last-child { color: rgba(29,29,25,.56); }
+
+    .content-hero-stage {
+        display: grid;
+        grid-template-columns: minmax(0, 1.08fr) minmax(360px, .72fr);
+        gap: clamp(54px, 8vw, 138px);
+        align-items: center;
+        padding: 48px 0 34px;
+    }
+
+    .content-eyebrow {
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: var(--c-sage);
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: .2em;
+        text-transform: uppercase;
+    }
+
+    .content-eyebrow::before {
+        content: '';
+        width: 44px;
+        height: 1px;
+        background: currentColor;
+    }
+
+    .content-hero h1 {
+        margin: 0;
+        max-width: 920px;
+        font-family: Georgia, 'Times New Roman', serif;
+        font-size: clamp(64px, 7.8vw, 126px);
+        font-weight: 400;
+        line-height: .91;
+        letter-spacing: -.065em;
+    }
+
+    .content-title-mask {
+        display: block;
+        overflow: hidden;
+        padding: .04em .05em .09em 0;
+    }
+
+    .content-title-mask > span {
+        display: block;
+        transform: translateY(115%);
+    }
+
+    .content-title-mask:nth-child(2) {
+        color: var(--c-sage);
+        padding-left: .52em;
+    }
+
+    .content-title-mark {
+        display: inline-block;
+        margin-left: .08em;
+        color: var(--c-gold);
+        font-style: italic;
+    }
+
+    .content-hero-aside {
+        align-self: end;
+        padding-bottom: 12px;
+    }
+
+    .content-hero-aside p {
+        margin: 0 0 34px;
+        max-width: 480px;
+        font-size: clamp(16px, 1.25vw, 20px);
+        line-height: 1.8;
+        letter-spacing: .02em;
+    }
+
+    .content-capability-list {
+        display: grid;
+        border-top: 1px solid var(--c-line);
+    }
+
+    .content-capability-row {
+        display: grid;
+        grid-template-columns: 34px 1fr auto;
+        gap: 12px;
+        align-items: center;
+        min-height: 54px;
+        border-bottom: 1px solid var(--c-line);
+        font-size: 12px;
+        letter-spacing: .08em;
+    }
+
+    .content-capability-row span:first-child {
+        color: var(--c-gold);
+        font-family: Georgia, serif;
+        font-style: italic;
+    }
+
+    .content-capability-row em {
+        color: rgba(29,29,25,.5);
+        font-size: 10px;
+        font-style: normal;
+        text-transform: uppercase;
+    }
+
+    .content-hero-foot {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        border-top: 1px solid var(--c-line);
+        border-bottom: 1px solid var(--c-line);
+    }
+
+    .content-stat {
+        min-height: 92px;
+        padding: 17px 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        border-right: 1px solid var(--c-line);
+    }
+
+    .content-stat:last-child { border-right: 0; }
+    .content-stat b { font-family: Georgia, serif; font-size: 25px; font-weight: 400; }
+    .content-stat span { color: rgba(29,29,25,.55); font-size: 10px; letter-spacing: .13em; text-transform: uppercase; }
+
+    .content-gallery {
+        padding: 104px 0 116px;
+        background:radial-gradient(circle at 14% 22%,rgba(238,233,245,.46),transparent 20rem),radial-gradient(circle at 86% 76%,rgba(231,241,247,.50),transparent 22rem),#fffdf8;
+        border-top: 1px solid rgba(29,29,25,.08);
+        border-bottom: 1px solid rgba(29,29,25,.08);
+    }
+
+    .content-gallery-head { align-items: flex-end; }
+
+    .content-gallery-head h2 {
+        margin: 0;
+        font-family: Georgia, serif;
+        font-size: clamp(44px, 5.6vw, 82px);
+        font-weight: 400;
+        line-height: .94;
+        letter-spacing: -.045em;
+        text-transform: none;
+    }
+
+    .content-gallery-head h2 em { color: var(--c-sage); font-weight: 400; }
+
+    .content-reel-controls {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .content-reel-index {
+        min-width: 82px;
+        text-align: center;
+        font-family: Georgia, serif;
+        font-size: 19px;
+        letter-spacing: .08em;
+        text-transform: none;
+    }
+
+    .content-reel-index span { color: var(--c-sage); }
+
+    .content-arrow {
+        width: 46px;
+        height: 46px;
+        border: 1px solid var(--c-line);
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        color: var(--c-ink);
+        background: transparent;
+        cursor: pointer;
+        transition: color .25s ease, background .25s ease, transform .25s ease;
+    }
+
+    .content-arrow:hover { color: var(--c-paper); background: var(--c-ink); transform: scale(1.05); }
+
+    .content-reel-wrap {
+        position: relative;
+        margin-top: 40px;
+        overflow: hidden;
+    }
+
+    .content-reel {
+        display: flex;
+        gap: 26px;
+        overflow-x: auto;
+        padding: 0 max(36px, calc((100vw - min(100vw - 72px, 1460px)) / 2)) 24px;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
+        cursor: grab;
+        touch-action: pan-y;
+    }
+
+    .content-reel::-webkit-scrollbar { display: none; }
+    .content-reel.is-dragging { cursor: grabbing; scroll-snap-type: none; }
+
+    .content-work {
+        position: relative;
+        flex: 0 0 min(1120px, 78vw);
+        min-height: 610px;
+        display: grid;
+        grid-template-columns: minmax(0, 1.55fr) minmax(285px, .7fr);
+        scroll-snap-align: center;
+        background: rgba(255,255,255,.72);
+        border: 1px solid var(--c-line);
+        border-radius: 30px;
+        overflow: hidden;
+        box-shadow: 0 22px 55px rgba(79,91,83,.10);
+    }
+
+    .content-work:nth-child(2) { background: #f3e5e7; }
+    .content-work:nth-child(3) { background: #e7eef7; }
+    .content-work:nth-child(4) { background: #e8e4f1; }
+
+    .content-work-visual {
+        position: relative;
+        min-height: 610px;
+        overflow: hidden;
+        background: #edf2ed;
+        border-radius: 30px 0 0 30px;
+    }
+
+    .content-work-visual::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        box-shadow: inset -1px 0 var(--c-line);
+        pointer-events: none;
+    }
+
+    .content-media {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        background:
+            linear-gradient(135deg, rgba(255,255,255,.56), transparent 48%),
+            radial-gradient(circle at 72% 30%, var(--project-accent, rgba(120,136,115,.48)), transparent 36%),
+            #edf2ed;
+    }
+
+    .content-media::before {
+        content: attr(data-no);
+        position: absolute;
+        right: 4%;
+        bottom: -10%;
+        color: rgba(29,29,25,.07);
+        font-family: Georgia, serif;
+        font-size: clamp(230px, 28vw, 460px);
+        line-height: 1;
+    }
+
+    .content-media img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0;
+        transform: scale(1.025);
+        transition: opacity .45s ease, transform 1.2s cubic-bezier(.2,.7,.2,1);
+    }
+
+    .content-media.has-image img { opacity: 1; }
+    .content-work:hover .content-media.has-image img { transform: scale(1.06); }
+
+    .content-placeholder-ui {
+        position: absolute;
+        inset: 0;
+        padding: 30px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        transition: opacity .3s ease;
+    }
+
+    .content-media.has-image .content-placeholder-ui { opacity: 0; pointer-events: none; }
+
+    .content-placeholder-top {
+        display: flex;
+        justify-content: space-between;
+        color: rgba(29,29,25,.57);
+        font-size: 10px;
+        letter-spacing: .17em;
+        text-transform: uppercase;
+    }
+
+    .content-placeholder-center {
+        align-self: center;
+        text-align: center;
+    }
+
+    .content-placeholder-center i {
+        width: 78px;
+        height: 78px;
+        margin: 0 auto 18px;
+        display: grid;
+        place-items: center;
+        border: 1px solid rgba(29,29,25,.28);
+        border-radius: 50%;
+        color: var(--c-ink);
+        font-family: Georgia, serif;
+        font-size: 28px;
+        font-style: italic;
+    }
+
+    .content-placeholder-center b {
+        display: block;
+        font-family: Georgia, serif;
+        font-size: clamp(28px, 3.5vw, 50px);
+        font-weight: 400;
+        letter-spacing: -.035em;
+    }
+
+    .content-placeholder-file {
+        max-width: 72%;
+        padding: 9px 13px;
+        color: rgba(29,29,25,.68);
+        background: rgba(244,240,231,.68);
+        border: 1px solid rgba(29,29,25,.12);
+        font-family: Consolas, monospace;
+        font-size: 10px;
+        letter-spacing: .04em;
+    }
+
+    /* Purpose-built artwork for projects that do not rely on photography. */
+    .content-concept {
+        isolation: isolate;
+        padding: clamp(24px, 3vw, 42px);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        color: #2c3650;
+        background: #eef2ff;
+    }
+
+    .content-concept::after {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        inset: 18% 13%;
+        border: 1px solid rgba(255,255,255,.72);
+        border-radius: 44% 56% 51% 49%;
+        background: rgba(255,255,255,.2);
+        filter: blur(.2px);
+        transform: rotate(-7deg);
+        transition: transform .8s cubic-bezier(.16,1,.3,1), border-radius .8s ease;
+    }
+
+    .content-work:hover .content-concept::after { border-radius: 54% 46% 43% 57%; transform: rotate(4deg) scale(1.05); }
+
+    .content-concept--rhythm { background: radial-gradient(circle at 78% 24%,rgba(255,255,255,.86),transparent 28%),linear-gradient(145deg,#eaf6ef,#dfe8ff 58%,#f7e7ef); }
+    .content-concept--live { background: radial-gradient(circle at 18% 82%,rgba(255,255,255,.74),transparent 28%),linear-gradient(145deg,#fff0e6,#f4e5f4 55%,#e5edff); }
+    .content-concept--matrix { background: radial-gradient(circle at 76% 76%,rgba(255,255,255,.78),transparent 27%),linear-gradient(145deg,#e3f3f8,#e8e7ff 52%,#f7e8f0); }
+    .content-concept--workflow { background: radial-gradient(circle at 22% 24%,rgba(255,255,255,.84),transparent 25%),linear-gradient(145deg,#f3e8ff,#e4edff 52%,#e8f6f0); }
+
+    .content-concept-top,
+    .content-concept-caption { position: relative; z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+    .content-concept-top { font-size: 9px; letter-spacing: .18em; text-transform: uppercase; }
+    .content-concept-top span:last-child { opacity: .55; }
+    .content-concept-caption { align-items: flex-end; }
+    .content-concept-caption strong { font-family: Georgia,serif; font-size: clamp(27px,3vw,46px); font-weight: 400; letter-spacing: -.04em; }
+    .content-concept-caption span { max-width: 190px; color: rgba(44,54,80,.62); font-size: 10px; line-height: 1.55; text-align: right; }
+
+    .content-rhythm-orbit { position: relative; width: min(66%,420px); aspect-ratio: 1; margin: auto; }
+    .content-orbit-ring { position: absolute; inset: 10%; border: 1px solid rgba(74,91,131,.24); border-radius: 50%; }
+    .content-orbit-ring::before,.content-orbit-ring::after { content:''; position:absolute; width:11px; height:11px; border:5px solid rgba(255,255,255,.72); border-radius:50%; background:#8294c4; box-shadow:0 8px 24px rgba(76,94,141,.22); }
+    .content-orbit-ring::before { left:8%; top:17%; }.content-orbit-ring::after { right:1%; bottom:25%; background:#d99daa; }
+    .content-orbit-ring.ring-two { inset: 22%; border-style: dashed; animation: contentOrbit 18s linear infinite reverse; }
+    .content-orbit-ring.ring-one { animation: contentOrbit 24s linear infinite; }
+    .content-orbit-core { position:absolute; inset:32%; display:grid; place-content:center; text-align:center; border-radius:50%; background:rgba(255,255,255,.72); box-shadow:0 24px 60px rgba(76,94,141,.14),inset 0 1px 0 #fff; transition:transform .55s cubic-bezier(.16,1,.3,1); }
+    .content-work:hover .content-orbit-core { transform:scale(1.07); }
+    .content-orbit-core small,.content-orbit-core em { font-size:8px; font-style:normal; letter-spacing:.18em; text-transform:uppercase; opacity:.58; }
+    .content-orbit-core b { font:400 clamp(32px,4vw,60px)/1 Georgia,serif; }
+    .content-orbit-note { position:absolute; padding:7px 11px; border:1px solid rgba(255,255,255,.82); border-radius:12px; background:rgba(255,255,255,.52); font-size:9px; letter-spacing:.1em; box-shadow:0 12px 30px rgba(65,78,116,.1); }
+    .content-orbit-note.note-one { left:-2%; top:38%; }.content-orbit-note.note-two { right:-4%; top:25%; }.content-orbit-note.note-three { right:3%; bottom:12%; }
+
+    .content-live-stage { position:relative; min-height:310px; display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:18px; }
+    .content-live-stage::before { content:''; position:absolute; left:12%; right:12%; top:50%; height:1px; background:linear-gradient(90deg,transparent,rgba(79,86,130,.25),transparent); }
+    .content-live-quote { position:relative; z-index:1; padding:28px 20px; border-radius:30px 30px 30px 6px; background:rgba(255,255,255,.62); box-shadow:0 22px 50px rgba(111,82,117,.11); font:400 clamp(25px,3vw,44px)/1 Georgia,'Songti SC',serif; text-align:center; transition:transform .6s cubic-bezier(.16,1,.3,1); }
+    .content-live-quote.quote-right { border-radius:30px 30px 6px 30px; transform:translateY(42px); }
+    .content-work:hover .quote-left { transform:translateY(-10px) rotate(-2deg); }.content-work:hover .quote-right { transform:translateY(30px) rotate(2deg); }
+    .content-live-signal { position:relative; z-index:2; width:76px; height:76px; display:flex; align-items:center; justify-content:center; gap:3px; border-radius:50%; color:#fff; background:#7c85b9; box-shadow:0 0 0 12px rgba(255,255,255,.32),0 18px 45px rgba(82,90,144,.23); }
+    .content-live-signal i { width:3px; height:14px; border-radius:3px; background:currentColor; animation:contentSignal 1.2s ease-in-out infinite alternate; }
+    .content-live-signal i:nth-child(2),.content-live-signal i:nth-child(4){height:25px;animation-delay:-.4s}.content-live-signal i:nth-child(3){height:34px;animation-delay:-.8s}
+    .content-live-signal b { position:absolute; top:calc(100% + 13px); color:#687399; font-size:8px; letter-spacing:.2em; }
+
+    .content-matrix-map { position:relative; min-height:330px; margin:auto 0; }
+    .content-matrix-core { position:absolute; z-index:2; left:50%; top:50%; width:124px; height:124px; display:grid; place-content:center; text-align:center; border-radius:38% 62% 55% 45%; background:rgba(255,255,255,.78); box-shadow:0 26px 60px rgba(73,91,137,.16); transform:translate(-50%,-50%) rotate(-5deg); transition:transform .7s cubic-bezier(.16,1,.3,1),border-radius .7s ease; }
+    .content-work:hover .content-matrix-core { border-radius:56% 44% 38% 62%; transform:translate(-50%,-50%) rotate(3deg) scale(1.06); }
+    .content-matrix-core small { font-size:9px; letter-spacing:.18em; text-transform:uppercase; opacity:.5; }.content-matrix-core b{font:400 34px/1 Georgia,serif}
+    .content-platform-chip { position:absolute; z-index:2; min-width:94px; padding:12px 16px; border:1px solid rgba(255,255,255,.82); border-radius:16px; background:rgba(255,255,255,.54); box-shadow:0 14px 36px rgba(69,87,125,.1); font-size:11px; text-align:center; transition:transform .55s cubic-bezier(.16,1,.3,1),background .3s ease; }
+    .content-platform-chip:hover { background:rgba(255,255,255,.86); transform:translateY(-6px) !important; }
+    .chip-one{left:8%;top:12%}.chip-two{right:7%;top:17%}.chip-three{left:12%;bottom:10%}.chip-four{right:8%;bottom:7%}
+    .content-matrix-path { position:absolute; left:50%; top:50%; width:27%; height:1px; transform-origin:left; background:linear-gradient(90deg,rgba(86,101,142,.34),transparent); }
+    .path-one{transform:rotate(210deg)}.path-two{transform:rotate(326deg)}.path-three{transform:rotate(145deg)}.path-four{transform:rotate(35deg)}
+
+    .content-workflow-line { position:relative; z-index:2; margin:auto 0; display:grid; grid-template-columns:1fr auto 1fr auto 1fr auto 1fr; align-items:center; gap:10px; }
+    .content-workflow-line > span { min-height:148px; padding:20px 14px; display:flex; flex-direction:column; justify-content:space-between; border:1px solid rgba(255,255,255,.84); border-radius:24px 24px 24px 8px; background:rgba(255,255,255,.48); box-shadow:0 18px 42px rgba(79,78,132,.08); transition:transform .5s cubic-bezier(.16,1,.3,1),background .35s ease; }
+    .content-workflow-line > span:hover { transform:translateY(-10px); background:rgba(255,255,255,.8); }
+    .content-workflow-line > span.is-key { color:#fff; background:#7d88bf; transform:translateY(-18px); box-shadow:0 24px 50px rgba(85,92,153,.22); }
+    .content-workflow-line > span.is-key:hover { transform:translateY(-25px); }
+    .content-workflow-line i { font-size:9px; font-style:normal; opacity:.55; }.content-workflow-line b{font:400 clamp(18px,2vw,28px)/1.1 Georgia,'Songti SC',serif}.content-workflow-line small{font-size:8px;letter-spacing:.12em;text-transform:uppercase;opacity:.55}
+    .content-workflow-line > em { width:20px; height:1px; background:rgba(76,87,129,.28); }
+
+    @keyframes contentOrbit { to { transform:rotate(360deg); } }
+    @keyframes contentSignal { to { transform:scaleY(.5); opacity:.62; } }
+
+    .content-viewer-note { padding:clamp(28px,6vw,92px); display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:clamp(24px,7vw,110px); color:#29344b; background:radial-gradient(circle at 82% 18%,rgba(255,255,255,.8),transparent 28%),linear-gradient(145deg,#eef2ff,#f8e8ef 52%,#e6f4ed); }
+    .content-viewer-note-no { align-self:start; font:italic 16px/1 Georgia,serif; }
+    .content-viewer-note div { max-width:800px; }.content-viewer-note small{font-size:10px;letter-spacing:.2em;text-transform:uppercase;opacity:.55}.content-viewer-note h3{margin:22px 0;font:400 clamp(42px,7vw,96px)/.95 Georgia,'Songti SC',serif;letter-spacing:-.05em}.content-viewer-note p{max-width:640px;margin:0;font-size:clamp(14px,1.4vw,19px);line-height:1.8;color:rgba(41,52,75,.68)}.content-viewer-note>em{align-self:end;font-size:9px;font-style:normal;letter-spacing:.16em;text-transform:uppercase;opacity:.5}
+
+    .content-work-info {
+        padding: 30px 30px 28px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .content-work-meta {
+        display: flex;
+        justify-content: space-between;
+        gap: 14px;
+        color: rgba(29,29,25,.52);
+        font-size: 9px;
+        letter-spacing: .15em;
+        text-transform: uppercase;
+    }
+
+    .content-work h3 {
+        margin: 70px 0 18px;
+        font-family: Georgia, serif;
+        font-size: clamp(34px, 3.3vw, 52px);
+        font-weight: 400;
+        line-height: 1.03;
+        letter-spacing: -.045em;
+    }
+
+    .content-work-summary {
+        margin: 0 0 28px;
+        color: rgba(29,29,25,.72);
+        font-size: 14px;
+        line-height: 1.72;
+    }
+
+    .content-proof-list { margin-top: auto; border-top: 1px solid var(--c-line); }
+
+    .content-proof-row {
+        display: grid;
+        grid-template-columns: 58px 1fr;
+        gap: 10px;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--c-line);
+        font-size: 11px;
+        line-height: 1.45;
+    }
+
+    .content-proof-row span { color: #6f8f75; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; }
+
+    .content-open-project {
+        margin-top: 26px;
+        padding: 0 0 8px;
+        align-self: flex-start;
+        border: 0;
+        border-bottom: 1px solid currentColor;
+        color: var(--c-ink);
+        background: transparent;
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: .15em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: color .25s ease, letter-spacing .25s ease;
+    }
+
+    .content-proof-card { border-radius: 22px; }
+
+    .content-open-project:hover { color: var(--c-sage); letter-spacing: .2em; }
+
+    .content-reel-hint {
+        width: min(100% - 72px, 1460px);
+        margin: 12px auto 0;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: rgba(29,29,25,.5);
+        font-size: 9px;
+        letter-spacing: .17em;
+        text-transform: uppercase;
+    }
+
+    .content-reel-hint::before { content: ''; width: 46px; height: 1px; background: currentColor; }
+
+    .content-proof {
+        padding: 112px 0;
+    }
+
+    .content-proof-title {
+        display: grid;
+        grid-template-columns: .8fr 1.2fr;
+        gap: 48px;
+        align-items: end;
+        margin-bottom: 56px;
+    }
+
+    .content-proof-title span {
+        color: var(--c-sage);
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: .18em;
+        text-transform: uppercase;
+    }
+
+    .content-proof-title h2 {
+        margin: 0;
+        font-family: Georgia, serif;
+        font-size: clamp(40px, 5vw, 72px);
+        font-weight: 400;
+        line-height: 1;
+        letter-spacing: -.045em;
+    }
+
+    .content-proof-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        border-top: 1px solid var(--c-line);
+        border-left: 1px solid var(--c-line);
+    }
+
+    .content-proof-card {
+        min-height: 310px;
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        border-right: 1px solid var(--c-line);
+        border-bottom: 1px solid var(--c-line);
+        transition: color .35s ease, background .35s ease;
+    }
+
+    .content-proof-card:hover { color: var(--c-paper); background: var(--c-ink); }
+
+    .content-proof-card .no {
+        color: var(--c-gold);
+        font-family: Georgia, serif;
+        font-style: italic;
+        font-size: 17px;
+    }
+
+    .content-proof-card b {
+        margin: auto 0 14px;
+        font-family: Georgia, serif;
+        font-size: 30px;
+        font-weight: 400;
+        line-height: 1.05;
+    }
+
+    .content-proof-card p {
+        margin: 0;
+        color: rgba(29,29,25,.58);
+        font-size: 12px;
+        line-height: 1.65;
+        transition: color .35s ease;
+    }
+
+    .content-proof-card:hover p { color: rgba(244,240,231,.65); }
+
+    .content-ending {
+        min-height: 86vh;
+        padding: 46px 0 50px;
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+        color: var(--c-paper);
+        background: #405048;
+    }
+
+    .content-end-top { border-color: rgba(244,240,231,.2); }
+
+    .content-ending h2 {
+        align-self: center;
+        margin: 42px 0;
+        max-width: 1180px;
+        font-family: Georgia, serif;
+        font-size: clamp(52px, 7.3vw, 110px);
+        font-weight: 400;
+        line-height: .94;
+        letter-spacing: -.055em;
+    }
+
+    .content-ending h2 em { color: #a9b8a3; font-weight: 400; }
+
+    .content-end-actions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding-top: 24px;
+        border-top: 1px solid rgba(244,240,231,.2);
+    }
+
+    .content-end-actions button {
+        padding: 13px 0;
+        border: 0;
+        color: inherit;
+        background: transparent;
+        font-size: 10px;
+        letter-spacing: .18em;
+        text-transform: uppercase;
+        cursor: pointer;
+    }
+
+    .content-viewer {
+        position: fixed;
+        z-index: 1000;
+        inset: 0;
+        display: grid;
+        grid-template-columns: 80px minmax(0,1fr) 80px;
+        grid-template-rows: 76px minmax(0,1fr) 76px;
+        color: var(--c-paper);
+        background: rgba(18,18,15,.97);
+        opacity: 0;
+        visibility: hidden;
+        clip-path: inset(48% 0 48% 0);
+        transition: opacity .35s ease, visibility .35s ease, clip-path .7s cubic-bezier(.77,0,.18,1);
+    }
+
+    .content-viewer.is-open { opacity: 1; visibility: visible; clip-path: inset(0); }
+    .content-viewer-head { grid-column: 1 / -1; padding: 0 28px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(244,240,231,.18); }
+    .content-viewer-title { font-family: Georgia, serif; font-size: 20px; }
+    .content-viewer-count { color: rgba(244,240,231,.55); font-size: 10px; letter-spacing: .15em; }
+    .content-viewer-close { width: 42px; height: 42px; border: 0; color: inherit; background: transparent; font-size: 24px; cursor: pointer; }
+
+    .content-viewer-stage {
+        grid-column: 2;
+        grid-row: 2;
+        position: relative;
+        margin: 24px 0;
+        overflow: hidden;
+    }
+
+    .content-viewer-track { height: 100%; display: flex; transition: transform .65s cubic-bezier(.22,.72,.22,1); }
+    .content-viewer-slide { position: relative; flex: 0 0 100%; overflow: hidden; background: #d3cdc1; }
+    .content-viewer-slide img { width: 100%; height: 100%; object-fit: contain; opacity: 0; }
+    .content-viewer-slide.has-image img { opacity: 1; }
+
+    .content-viewer-placeholder {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-content: center;
+        gap: 14px;
+        color: var(--c-ink);
+        text-align: center;
+        background:
+            linear-gradient(125deg, rgba(255,255,255,.55), transparent 50%),
+            radial-gradient(circle at 70% 25%, rgba(120,136,115,.46), transparent 32%),
+            #d3cdc1;
+    }
+
+    .content-viewer-slide.has-image .content-viewer-placeholder { display: none; }
+    .content-viewer-placeholder b { font-family: Georgia, serif; font-size: clamp(38px, 6vw, 88px); font-weight: 400; }
+    .content-viewer-placeholder code { padding: 8px 12px; color: rgba(29,29,25,.6); background: rgba(244,240,231,.58); font-size: 11px; }
+
+    .content-viewer-nav {
+        border: 0;
+        color: inherit;
+        background: transparent;
+        font-size: 28px;
+        cursor: pointer;
+    }
+
+    .content-viewer-prev { grid-column: 1; grid-row: 2; }
+    .content-viewer-next { grid-column: 3; grid-row: 2; }
+    .content-viewer-foot { grid-column: 1 / -1; grid-row: 3; display: flex; align-items: center; justify-content: center; color: rgba(244,240,231,.55); font-size: 9px; letter-spacing: .18em; text-transform: uppercase; }
+
+    .c-in {
+        opacity: 0;
+        transform: translateY(36px);
+        transition: opacity .8s ease, transform .9s cubic-bezier(.2,.72,.2,1);
+    }
+
+    .c-in.is-visible { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 980px) {
+        .content-page {
+            height: auto;
+            overflow: visible;
+            background: var(--c-paper);
+        }
+        .content-shell { width: min(100% - 40px, 720px); }
+        .content-progress { display: none; }
+        .content-hero { min-height: auto; padding: 28px 0 34px; }
+        .content-hero-stage { grid-template-columns: 1fr; gap: 38px; padding: 62px 0 48px; }
+        .content-hero h1 { font-size: clamp(54px, 14vw, 84px); }
+        .content-title-mask:nth-child(2) { padding-left: 0; }
+        .content-hero-aside { padding: 0; }
+        .content-hero-foot { grid-template-columns: repeat(2, 1fr); }
+        .content-stat:nth-child(2) { border-right: 0; }
+        .content-stat:nth-child(-n+2) { border-bottom: 1px solid var(--c-line); }
+        .content-gallery { padding: 78px 0 88px; }
+        .content-gallery-head { align-items: center; }
+        .content-gallery-head h2 { font-size: clamp(42px, 12vw, 64px); }
+        .content-reel-controls { align-self: flex-end; }
+        .content-reel-index { min-width: 58px; font-size: 15px; }
+        .content-arrow { width: 39px; height: 39px; }
+        .content-reel { gap: 16px; padding-left: 20px; padding-right: 20px; touch-action: pan-x pan-y; }
+        .content-work { flex-basis: calc(100vw - 42px); min-height: auto; grid-template-columns: 1fr; }
+        .content-work-visual { min-height: 58vw; border-radius:30px 30px 0 0; }
+        .content-work-info { min-height: 430px; padding: 24px 22px; }
+        .content-work h3 { margin: 36px 0 16px; font-size: 38px; }
+        .content-placeholder-ui { padding: 18px; }
+        .content-placeholder-center i { width: 58px; height: 58px; margin-bottom: 10px; }
+        .content-placeholder-file { max-width: 100%; font-size: 8px; }
+        .content-reel-hint { width: calc(100% - 40px); }
+        .content-proof { padding: 84px 0; }
+        .content-proof-title { grid-template-columns: 1fr; gap: 18px; }
+        .content-proof-grid { grid-template-columns: repeat(2, 1fr); }
+        .content-proof-card { min-height: 250px; padding: 20px; }
+        .content-ending { min-height: 78vh; }
+        .content-viewer { grid-template-columns: 48px minmax(0,1fr) 48px; grid-template-rows: 64px minmax(0,1fr) 58px; }
+        .content-viewer-head { padding: 0 16px; }
+        .content-viewer-stage { margin: 14px 0; }
+    }
+
+    @media (max-width: 560px) {
+        .content-shell { width: calc(100% - 36px); }
+        .content-hero-top span:last-child { display: none; }
+        .content-hero h1 { font-size: 52px; }
+        .content-hero-aside p { font-size: 15px; }
+        .content-gallery-head { display: grid; }
+        .content-reel-controls { justify-self: end; }
+        .content-work-visual { min-height: 290px; }
+        .content-work-info { min-height: 410px; }
+        .content-proof-grid { grid-template-columns: 1fr; }
+        .content-proof-card { min-height: 210px; }
+        .content-ending h2 { font-size: 48px; }
+        .content-end-actions { align-items: flex-end; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .content-page *, .content-page *::before, .content-page *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+        .content-title-mask > span { transform: none; }
+    }
+</style>
+
+<div class="page-section content-page internal-scroll" id="contentPage">
+    <div class="content-progress" aria-hidden="true"></div>
+
+    <section class="content-hero" aria-labelledby="content-main-title">
+        <div class="content-shell content-hero-top">
+            <strong>Portfolio 06 / Content</strong>
+            <span>Selected work &amp; evidence</span>
+        </div>
+
+        <div class="content-shell content-hero-stage">
+            <div>
+                <div class="content-eyebrow c-in">Content &amp; Output</div>
+                <h1 id="content-main-title">
+                    <span class="content-title-mask"><span>&#35753;&#20316;&#21697;</span></span>
+                    <span class="content-title-mask"><span>&#33258;&#24049;&#35828;&#35805;<i class="content-title-mark">.</i></span></span>
+                </h1>
+            </div>
+
+            <aside class="content-hero-aside c-in">
+                <p>我独立完成选题、脚本、制作、发布和复盘。下面按项目列出我负责的工作、具体做法和结果。</p>
+                <div class="content-capability-list" aria-label="Core capabilities">
+                    <div class="content-capability-row"><span>01</span><b>&#36873;&#39064;&#19982;&#33050;&#26412;</b><em>Topic / Script</em></div>
+                    <div class="content-capability-row"><span>02</span><b>&#35270;&#35273;&#19982;&#21098;&#36753;</b><em>Visual / Edit</em></div>
+                    <div class="content-capability-row"><span>03</span><b>&#21457;&#24067;&#19982;&#22797;&#30424;</b><em>Publish / Review</em></div>
+                </div>
+            </aside>
+        </div>
+
+        <div class="content-shell content-hero-foot c-in">
+            <div class="content-stat"><b>0&#8594;1</b><span>&#20840;&#27969;&#31243;&#29420;&#31435;&#20132;&#20184;</span></div>
+            <div class="content-stat"><b>5+</b><span>&#20027;&#27969;&#20869;&#23481;&#24179;&#21488;</span></div>
+            <div class="content-stat"><b>Weekly</b><span>&#31283;&#23450;&#36873;&#39064;&#19982;&#29983;&#20135;</span></div>
+            <div class="content-stat"><b>Data-led</b><span>&#29992;&#32467;&#26524;&#20915;&#23450;&#19979;&#19968;&#27493;</span></div>
+        </div>
+    </section>
+
+    <section class="content-gallery" aria-labelledby="content-gallery-title">
+        <div class="content-shell content-gallery-head c-in">
+            <h2 id="content-gallery-title">Selected <em>Work</em></h2>
+            <div class="content-reel-controls">
+                <button class="content-arrow content-reel-prev" type="button" aria-label="Previous work">&#8592;</button>
+                <div class="content-reel-index"><span>01</span> / 04</div>
+                <button class="content-arrow content-reel-next" type="button" aria-label="Next work">&#8594;</button>
+            </div>
+        </div>
+
+        <div class="content-reel-wrap c-in">
+            <div class="content-reel" id="contentReel" aria-label="Selected work carousel">
+                <article class="content-work" data-project="0" style="--project-accent:rgba(116,139,108,.55)">
+                    <div class="content-work-visual">
+                        <div class="content-media content-concept content-concept--rhythm" data-no="01" role="img" aria-label="ColorfulWidget weekly content rhythm visualization">
+                            <div class="content-concept-top"><span>Weekly rhythm</span><span>01 / Growth</span></div>
+                            <div class="content-rhythm-orbit" aria-hidden="true">
+                                <span class="content-orbit-ring ring-one"></span>
+                                <span class="content-orbit-ring ring-two"></span>
+                                <span class="content-orbit-core"><small>Every</small><b>7D</b><em>Review</em></span>
+                                <span class="content-orbit-note note-one">Topic</span>
+                                <span class="content-orbit-note note-two">Publish</span>
+                                <span class="content-orbit-note note-three">Learn</span>
+                            </div>
+                            <div class="content-concept-caption"><strong>ColorfulWidget</strong><span>每周完成选题、发布和复盘</span></div>
+                        </div>
+                    </div>
+                    <div class="content-work-info">
+                        <div class="content-work-meta"><span>Growth Content</span><span>Weekly</span></div>
+                        <h3>独立完成<br>周更内容运营</h3>
+                        <p class="content-work-summary">&#29420;&#31435;&#23436;&#25104;&#36873;&#39064;&#12289;&#33050;&#26412;&#12289;&#32032;&#26448;&#12289;&#21098;&#36753;&#12289;&#21457;&#24067;&#19982;&#25968;&#25454;&#36319;&#36394;&#12290;</p>
+                        <div class="content-proof-list">
+                            <div class="content-proof-row"><span>Role</span><b>&#20840;&#27969;&#31243;&#36127;&#36131;</b></div>
+                            <div class="content-proof-row"><span>Action</span><b>&#28909;&#28857;&#30417;&#27979; + LLM &#36741;&#21161; + &#25968;&#25454;&#35843;&#25972;</b></div>
+                            <div class="content-proof-row"><span>Result</span><b>&#36305;&#36890;&#20302;&#25104;&#26412;&#20869;&#23481;&#25289;&#26032;&#65292;&#26680;&#24515;&#25351;&#26631;&#39640;&#20110;&#21382;&#21490;&#22522;&#32447;</b></div>
+                        </div>
+                        <button class="content-open-project" type="button">查看项目说明 &#8599;</button>
+                    </div>
+                </article>
+
+                <article class="content-work" data-project="1" style="--project-accent:rgba(182,146,107,.5)">
+                    <div class="content-work-visual">
+                        <div class="content-media content-concept content-concept--live" data-no="02" role="img" aria-label="Debate and livestream format visualization">
+                            <div class="content-concept-top"><span>Live format</span><span>02 / Campus</span></div>
+                            <div class="content-live-stage" aria-hidden="true">
+                                <span class="content-live-quote quote-left">观点</span>
+                                <span class="content-live-signal"><i></i><i></i><i></i><i></i><i></i><b>LIVE</b></span>
+                                <span class="content-live-quote quote-right">回应</span>
+                            </div>
+                            <div class="content-concept-caption"><strong>Debate × Live</strong><span>策划并执行辩论直播</span></div>
+                        </div>
+                    </div>
+                    <div class="content-work-info">
+                        <div class="content-work-meta"><span>Creative Format</span><span>Campus</span></div>
+                        <h3>策划并执行<br>辩论直播</h3>
+                        <p class="content-work-summary">&#25285;&#20219;&#20027;&#36777;&#25163;&#65292;&#24182;&#23581;&#35797;&#8220;&#36777;&#35770; + &#30452;&#25773;&#8221;&#65292;&#37325;&#26032;&#35774;&#35745;&#35266;&#30475;&#19982;&#21442;&#19982;&#26041;&#24335;&#12290;</p>
+                        <div class="content-proof-list">
+                            <div class="content-proof-row"><span>Role</span><b>&#20027;&#36777;&#25163; / &#20869;&#23481;&#24418;&#24335;&#31574;&#21010;</b></div>
+                            <div class="content-proof-row"><span>Action</span><b>&#36777;&#35770;&#29616;&#22330;&#19982;&#23454;&#26102;&#30452;&#25773;&#32467;&#21512;</b></div>
+                            <div class="content-proof-row"><span>Result</span><b>&#32447;&#19978;&#26333;&#20809;&#19982;&#20114;&#21160;&#25552;&#21319;&#65292;&#33719;&#8220;&#26368;&#20339;&#36777;&#25163;&#8221;</b></div>
+                        </div>
+                        <button class="content-open-project" type="button">查看项目说明 &#8599;</button>
+                    </div>
+                </article>
+
+                <article class="content-work" data-project="2" style="--project-accent:rgba(108,126,145,.5)">
+                    <div class="content-work-visual">
+                        <div class="content-media content-concept content-concept--matrix" data-no="03" role="img" aria-label="Multi-platform content adaptation matrix">
+                            <div class="content-concept-top"><span>Content matrix</span><span>03 / 5+ Platforms</span></div>
+                            <div class="content-matrix-map" aria-hidden="true">
+                                <span class="content-matrix-core"><small>One</small><b>IDEA</b></span>
+                                <span class="content-platform-chip chip-one">抖音</span>
+                                <span class="content-platform-chip chip-two">小红书</span>
+                                <span class="content-platform-chip chip-three">TikTok</span>
+                                <span class="content-platform-chip chip-four">Instagram</span>
+                                <i class="content-matrix-path path-one"></i><i class="content-matrix-path path-two"></i><i class="content-matrix-path path-three"></i><i class="content-matrix-path path-four"></i>
+                            </div>
+                            <div class="content-concept-caption"><strong>Platform Matrix</strong><span>同一主题按平台分别制作</span></div>
+                        </div>
+                    </div>
+                    <div class="content-work-info">
+                        <div class="content-work-meta"><span>Platform Adaptation</span><span>5+</span></div>
+                        <h3>按平台重写<br>同一主题</h3>
+                        <p class="content-work-summary">&#38754;&#21521;&#25238;&#38899;&#12289;&#23567;&#32418;&#20070;&#12289;&#24555;&#25163;&#12289;TikTok &#19982; Instagram&#65292;&#25353;&#33410;&#22863;&#12289;&#35821;&#27668;&#21644;&#29992;&#25143;&#39044;&#26399;&#35843;&#25972;&#34920;&#36798;&#12290;</p>
+                        <div class="content-proof-list">
+                            <div class="content-proof-row"><span>Focus</span><b>&#26631;&#39064;&#12289;&#24320;&#22330;&#12289;&#35270;&#35273;&#12289;&#26102;&#38271;</b></div>
+                            <div class="content-proof-row"><span>Skill</span><b>&#24179;&#21488;&#35821;&#24863;&#19982;&#20869;&#23481;&#37325;&#32452;</b></div>
+                            <div class="content-proof-row"><span>Tools</span><b>&#21098;&#26144; / &#24517;&#21098; / Canva</b></div>
+                        </div>
+                        <button class="content-open-project" type="button">查看项目说明 &#8599;</button>
+                    </div>
+                </article>
+
+                <article class="content-work" data-project="3" style="--project-accent:rgba(153,120,128,.45)">
+                    <div class="content-work-visual">
+                        <div class="content-media content-concept content-concept--workflow" data-no="04" role="img" aria-label="Human-led AI-assisted workflow diagram">
+                            <div class="content-concept-top"><span>Human-led workflow</span><span>04 / AI-assisted</span></div>
+                            <div class="content-workflow-line" aria-hidden="true">
+                                <span><i>01</i><b>观察</b><small>Observe</small></span>
+                                <em></em>
+                                <span><i>02</i><b>扩展</b><small>Expand</small></span>
+                                <em></em>
+                                <span class="is-key"><i>03</i><b>判断</b><small>Decide</small></span>
+                                <em></em>
+                                <span><i>04</i><b>复盘</b><small>Review</small></span>
+                            </div>
+                            <div class="content-concept-caption"><strong>AI Workflow</strong><span>AI 辅助准备，我负责取舍</span></div>
+                        </div>
+                    </div>
+                    <div class="content-work-info">
+                        <div class="content-work-meta"><span>AI-assisted</span><span>Human-led</span></div>
+                        <h3>用 AI 辅助<br>选题和脚本</h3>
+                        <p class="content-work-summary">&#29992;&#22823;&#27169;&#22411;&#25193;&#23637;&#36873;&#39064;&#19982;&#33050;&#26412;&#26679;&#26412;&#65292;&#26368;&#32456;&#30001;&#24179;&#21488;&#35821;&#24863;&#12289;&#29992;&#25143;&#38656;&#27714;&#21644;&#19994;&#21153;&#30446;&#26631;&#36827;&#34892;&#31579;&#36873;&#12290;</p>
+                        <div class="content-proof-list">
+                            <div class="content-proof-row"><span>AI</span><b>&#36873;&#39064;&#21457;&#25955; / &#33050;&#26412;&#33609;&#26696; / &#21453;&#39304;&#24402;&#32435;</b></div>
+                            <div class="content-proof-row"><span>Human</span><b>&#35282;&#24230;&#21028;&#26029; / &#33410;&#22863;&#21462;&#33293; / &#32467;&#26524;&#22797;&#30424;</b></div>
+                            <div class="content-proof-row"><span>Edge</span><b>&#20869;&#23481;&#21046;&#20316; &#215; &#25968;&#25454;&#20998;&#26512;&#32972;&#26223;</b></div>
+                        </div>
+                        <button class="content-open-project" type="button">查看项目说明 &#8599;</button>
+                    </div>
+                </article>
+            </div>
+        </div>
+        <div class="content-reel-hint">拖拽卡片或使用左右按钮</div>
+    </section>
+
+    <section class="content-proof" aria-labelledby="content-proof-title">
+        <div class="content-shell">
+            <div class="content-proof-title c-in">
+                <span>What HR can verify</span>
+                <h2 id="content-proof-title">&#33021;&#21147;&#65292;&#33853;&#22312;&#21487;&#26816;&#26597;&#30340;&#20132;&#20184;&#19978;&#12290;</h2>
+            </div>
+            <div class="content-proof-grid">
+                <article class="content-proof-card c-in"><span class="no">01</span><b>&#29420;&#31435;&#20132;&#20184;</b><p>&#20174;&#31354;&#30333;&#39029;&#21040;&#21457;&#24067;&#23436;&#25104;&#65292;&#33021;&#29420;&#31435;&#25512;&#36827;&#12290;</p></article>
+                <article class="content-proof-card c-in"><span class="no">02</span><b>&#24179;&#21488;&#36866;&#37197;</b><p>&#19981;&#26426;&#26800;&#20998;&#21457;&#65292;&#20250;&#26681;&#25454;&#24179;&#21488;&#35843;&#25972;&#34920;&#36798;&#12290;</p></article>
+                <article class="content-proof-card c-in"><span class="no">03</span><b>&#25968;&#25454;&#22797;&#30424;</b><p>&#29992;&#25351;&#26631;&#21644;&#21453;&#39304;&#21028;&#26029;&#32487;&#32493;&#12289;&#35843;&#25972;&#25110;&#20572;&#27490;&#12290;</p></article>
+                <article class="content-proof-card c-in"><span class="no">04</span><b>&#20869;&#23481; &#215; &#20135;&#21697;</b><p>&#33021;&#25226;&#29992;&#25143;&#21453;&#39304;&#36716;&#25104;&#20869;&#23481;&#21644;&#20307;&#39564;&#24314;&#35758;&#12290;</p></article>
+            </div>
+        </div>
+    </section>
+
+    <section class="content-ending" aria-labelledby="content-end-title">
+        <div class="content-shell content-end-top"><span>End of Content</span><span>06 / 06</span></div>
+        <div class="content-shell">
+            <h2 id="content-end-title" class="c-in">&#20869;&#23481;&#19981;&#26159;&#25105;&#30340;&#34920;&#36798;&#27442;&#65292;<br>&#26159;&#25105;&#35299;&#20915;&#38382;&#39064;&#30340;<em>&#19968;&#31181;&#26041;&#24335;</em>&#12290;</h2>
+        </div>
+        <div class="content-shell content-end-actions">
+            <button class="page-prev" type="button">&#8592; Prev / Growth</button>
+            <button class="page-next" type="button">Back to cover &#8599;</button>
+        </div>
+    </section>
+
+    <div class="content-viewer" id="contentViewer" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Project image viewer">
+        <div class="content-viewer-head">
+            <div class="content-viewer-title">Project</div>
+            <div class="content-viewer-count">01 / 03</div>
+            <button class="content-viewer-close" type="button" aria-label="Close image viewer">&#215;</button>
+        </div>
+        <button class="content-viewer-nav content-viewer-prev" type="button" aria-label="Previous image">&#8592;</button>
+        <div class="content-viewer-stage"><div class="content-viewer-track"></div></div>
+        <button class="content-viewer-nav content-viewer-next" type="button" aria-label="Next image">&#8594;</button>
+        <div class="content-viewer-foot">方向键切换 / Esc 关闭</div>
+    </div>
+</div>
+
+<script>
+(() => {
+    const page = document.getElementById('contentPage');
+    if (!page || page.dataset.contentReady === 'true') return;
+    page.dataset.contentReady = 'true';
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const mobile = window.matchMedia('(max-width: 980px)').matches;
+    const observerRoot = null;
+    const titleLines = page.querySelectorAll('.content-title-mask > span');
+    const revealItems = page.querySelectorAll('.c-in');
+    const reel = page.querySelector('#contentReel');
+    const works = [...page.querySelectorAll('.content-work')];
+    const indexNow = page.querySelector('.content-reel-index span');
+    const viewer = page.querySelector('#contentViewer');
+    const viewerTrack = page.querySelector('.content-viewer-track');
+    const viewerTitle = page.querySelector('.content-viewer-title');
+    const viewerCount = page.querySelector('.content-viewer-count');
+
+    /* Keep the fixed viewer outside transformed page sections so it stays viewport-bound. */
+    if (viewer && viewer.parentElement !== document.body) document.body.appendChild(viewer);
+
+    let currentWork = 0;
+    let currentImage = 0;
+    let dragStart = 0;
+    let reelStart = 0;
+    let dragging = false;
+    let activePointerId = null;
+
+    page.querySelectorAll('.content-media').forEach(media => {
+        const img = media.querySelector('img');
+        if (!img) return;
+        const mark = () => media.classList.toggle('has-image', img.complete && img.naturalWidth > 0);
+        img.addEventListener('load', mark);
+        img.addEventListener('error', mark);
+        mark();
+    });
+
+    const revealObserver = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add('is-visible');
+            revealObserver.unobserve(entry.target);
+        });
+    }, { root: observerRoot, threshold: .14, rootMargin: '0px 0px -7% 0px' });
+
+    revealItems.forEach((item, i) => {
+        item.style.transitionDelay = Math.min((i % 4) * .055, .165) + 's';
+        revealObserver.observe(item);
+    });
+
+    function playHero() {
+        if (typeof gsap !== 'undefined' && !reduced) {
+            gsap.to(titleLines, { y: 0, duration: 1.15, stagger: .13, delay: .12, ease: 'power4.out' });
+        } else {
+            titleLines.forEach(line => line.style.transform = 'none');
+        }
+    }
+
+    const heroObserver = new IntersectionObserver(entries => {
+        if (!entries[0].isIntersecting) return;
+        playHero();
+        heroObserver.disconnect();
+    }, { root: observerRoot, threshold: .18 });
+    heroObserver.observe(page.querySelector('.content-hero'));
+
+    function nearestWork() {
+        if (!reel || !works.length) return 0;
+        const center = reel.scrollLeft + reel.clientWidth / 2;
+        let best = 0;
+        let distance = Infinity;
+        works.forEach((work, i) => {
+            const workCenter = work.offsetLeft + work.offsetWidth / 2;
+            const nextDistance = Math.abs(workCenter - center);
+            if (nextDistance < distance) { distance = nextDistance; best = i; }
+        });
+        return best;
+    }
+
+    function syncReelIndex() {
+        currentWork = nearestWork();
+        if (indexNow) indexNow.textContent = String(currentWork + 1).padStart(2, '0');
+    }
+
+    function goToWork(index) {
+        currentWork = (index + works.length) % works.length;
+        const work = works[currentWork];
+        const maxScroll = Math.max(0, reel.scrollWidth - reel.clientWidth);
+        const target = Math.min(maxScroll, Math.max(0, work.offsetLeft - (reel.clientWidth - work.offsetWidth) / 2));
+        reel.scrollTo({ left: target, behavior: reduced ? 'auto' : 'smooth' });
+        document.documentElement.scrollLeft = 0;
+        document.body.scrollLeft = 0;
+        if (indexNow) indexNow.textContent = String(currentWork + 1).padStart(2, '0');
+    }
+
+    page.querySelector('.content-reel-prev')?.addEventListener('click', () => goToWork(currentWork - 1));
+    page.querySelector('.content-reel-next')?.addEventListener('click', () => goToWork(currentWork + 1));
+    reel?.addEventListener('scroll', syncReelIndex, { passive: true });
+
+    reel?.addEventListener('pointerdown', event => {
+        if (event.target.closest('button')) return;
+        dragging = true;
+        activePointerId = event.pointerId;
+        dragStart = event.clientX;
+        reelStart = reel.scrollLeft;
+        reel.classList.add('is-dragging');
+        reel.setPointerCapture(event.pointerId);
+    });
+
+    reel?.addEventListener('pointermove', event => {
+        if (!dragging) return;
+        const maxScroll = Math.max(0, reel.scrollWidth - reel.clientWidth);
+        const next = reelStart - (event.clientX - dragStart) * 1.15;
+        reel.scrollLeft = Math.min(maxScroll, Math.max(0, next));
+        document.documentElement.scrollLeft = 0;
+        document.body.scrollLeft = 0;
+    });
+
+    function stopDrag(event) {
+        if (!dragging) return;
+        dragging = false;
+        reel?.classList.remove('is-dragging');
+        if (activePointerId !== null && reel?.hasPointerCapture(activePointerId)) reel.releasePointerCapture(activePointerId);
+        activePointerId = null;
+        goToWork(nearestWork());
+    }
+
+    reel?.addEventListener('pointerup', stopDrag);
+    reel?.addEventListener('pointercancel', stopDrag);
+    reel?.addEventListener('lostpointercapture', stopDrag);
+
+    const projectSlides = [
+        [
+            { label: '项目范围', title: '周更内容运营', body: '独立完成选题、脚本、素材、剪辑、发布和数据跟踪。' },
+            { label: '我的工作', title: '用反馈调整内容', body: '根据热点和用户反馈确定选题，再按发布数据调整标题、开场和节奏。' },
+            { label: '结果', title: '跑通内容拉新', body: '形成可持续的周更流程，核心指标高于历史基线。' }
+        ],
+        [
+            { label: '项目范围', title: '辩论直播策划', body: '担任主辩手，并负责线上内容形式和互动流程。' },
+            { label: '我的工作', title: '连接现场与直播', body: '把线下辩论、实时直播和线上互动放进同一套执行流程。' },
+            { label: '结果', title: '提升线上参与', body: '增加线上曝光和互动，并获得“最佳辩手”。' }
+        ],
+        [
+            { label: '项目范围', title: '多平台内容适配', body: '覆盖抖音、小红书、快手、TikTok 和 Instagram。' },
+            { label: '我的工作', title: '按平台重写内容', body: '针对平台用户和推荐机制调整标题、开场、视觉和时长。' },
+            { label: '交付', title: '建立适配方法', body: '同一主题分别制作，不做简单复制和机械分发。' }
+        ],
+        [
+            { label: '项目范围', title: 'AI 辅助内容流程', body: '用大模型处理选题发散、脚本草案和反馈归纳。' },
+            { label: '我的工作', title: '保留人工判断', body: '我负责选择角度、调整节奏，并按用户需求和业务目标做取舍。' },
+            { label: '结果', title: '缩短准备时间', body: '提高前期产出速度，同时保留内容质量和平台语感。' }
+        ]
+    ];
+
+    function renderViewer() {
+        const slides = projectSlides[currentWork];
+        viewerTrack.innerHTML = '';
+        slides.forEach((item, i) => {
+            const slide = document.createElement('div');
+            slide.className = 'content-viewer-slide content-viewer-note';
+            slide.innerHTML = '<span class="content-viewer-note-no">' + String(i + 1).padStart(2, '0') + '</span>' +
+                '<div><small>' + item.label + '</small><h3>' + item.title + '</h3><p>' + item.body + '</p></div>' +
+                '<em>项目说明 / ' + String(currentWork + 1).padStart(2, '0') + '</em>';
+            viewerTrack.appendChild(slide);
+        });
+        updateViewer();
+    }
+
+    function updateViewer() {
+        viewerTrack.style.transform = 'translate3d(' + (-currentImage * 100) + '%,0,0)';
+        viewerCount.textContent = String(currentImage + 1).padStart(2, '0') + ' / 03';
+    }
+
+    function openViewer(projectIndex) {
+        currentWork = projectIndex;
+        currentImage = 0;
+        viewerTitle.textContent = works[currentWork].querySelector('h3').innerText.replace(/\n/g, ' ');
+        renderViewer();
+        viewer.classList.add('is-open');
+        viewer.setAttribute('aria-hidden', 'false');
+        page.style.overflow = 'hidden';
+        viewer.querySelector('.content-viewer-close')?.focus();
+    }
+
+    function closeViewer() {
+        viewer.classList.remove('is-open');
+        viewer.setAttribute('aria-hidden', 'true');
+        page.style.overflow = '';
+    }
+
+    function stepViewer(step) {
+        currentImage = (currentImage + step + 3) % 3;
+        updateViewer();
+    }
+
+    works.forEach((work, i) => work.querySelector('.content-open-project')?.addEventListener('click', () => openViewer(i)));
+    viewer?.querySelector('.content-viewer-close')?.addEventListener('click', closeViewer);
+    viewer?.querySelector('.content-viewer-prev')?.addEventListener('click', () => stepViewer(-1));
+    viewer?.querySelector('.content-viewer-next')?.addEventListener('click', () => stepViewer(1));
+    viewer?.addEventListener('click', event => { if (event.target === viewer) closeViewer(); });
+
+    document.addEventListener('keydown', event => {
+        if (!viewer.classList.contains('is-open')) return;
+        if (event.key === 'Escape') closeViewer();
+        if (event.key === 'ArrowLeft') stepViewer(-1);
+        if (event.key === 'ArrowRight') stepViewer(1);
+    });
+
+    function updatePage(progressValue) {
+        if (mobile) return;
+        page.style.setProperty('--c-progress', Math.min(Math.max(Number(progressValue) || 0, 0), 1).toFixed(4));
+        revealItems.forEach(item => {
+            if (item.classList.contains('is-visible')) return;
+            const rect = item.getBoundingClientRect();
+            if (rect.top < window.innerHeight * .94 && rect.bottom > 0) item.classList.add('is-visible');
+        });
+    }
+
+    if (typeof ScrollTrigger !== 'undefined') {
+        ScrollTrigger.create({
+            id: 'content-page-progress',
+            trigger: page,
+            start: 'top top',
+            end: 'bottom bottom',
+            onUpdate: self => updatePage(self.progress)
+        });
+    }
+    page.addEventListener('pointermove', event => {
+        const rect = page.getBoundingClientRect();
+        page.style.setProperty('--mx', ((event.clientX - rect.left) / rect.width * 100).toFixed(1) + '%');
+        page.style.setProperty('--my', ((event.clientY - rect.top) / rect.height * 100).toFixed(1) + '%');
+    }, { passive: true });
+
+    page.querySelector('.content-end-actions .page-next')?.addEventListener('click', () => {
+        if (!mobile) return;
+        document.querySelectorAll('.page-section')[0]?.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth' });
+    });
+
+    updatePage(0);
+    syncReelIndex();
+})();
+</script>

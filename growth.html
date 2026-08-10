@@ -1,0 +1,1508 @@
+<style>
+    /* =========================================================
+       GROWTH / &#29992;&#25143;&#22686;&#38271;
+       &#19982;&#20840;&#31449;&#32440;&#24352;&#12289;&#35910;&#27801;&#37329;&#12289;&#23435;&#20307;&#35270;&#35273;&#20445;&#25345;&#19968;&#33268;&#30340;&#27785;&#28024;&#24335;&#22686;&#38271;&#21465;&#20107;&#39029;
+       ========================================================= */
+    .growth-page {
+        --growth-paper: #fffdf8;
+        --growth-paper-deep: #fbf8f1;
+        --growth-ink: #2f3b36;
+        --growth-muted: #5f6d65;
+        --growth-gold: #b29372;
+        --growth-sage: #8ea58f;
+        --growth-sage-soft: rgba(142,165,143,.16);
+        --growth-line: rgba(52,58,54,.13);
+        --growth-progress: 0;
+        position: relative;
+        width: 100%;
+        min-height: 100vh;
+        color: var(--growth-ink);
+        background: var(--growth-paper);
+        font-family: "Plus Jakarta Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+        isolation: isolate;
+        overscroll-behavior: contain;
+        scroll-snap-type: none;
+    }
+
+    .growth-page::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: -3;
+        pointer-events: none;
+        background:
+            radial-gradient(circle at var(--mx, 72%) var(--my, 18%), rgba(229,240,230,.46), transparent 22%),
+            radial-gradient(circle at 14% 68%, rgba(247,232,232,.34), transparent 27%),
+            radial-gradient(circle at 86% 78%, rgba(231,241,247,.34), transparent 25%);
+        transition: background-position .2s linear;
+    }
+
+    .growth-page::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: 20;
+        pointer-events: none;
+        opacity: .04;
+        background-image:
+            repeating-radial-gradient(circle at 0 0, transparent 0, rgba(52,43,35,.08) .55px, transparent .9px, transparent 4px);
+        background-size: 5px 5px;
+        mix-blend-mode: multiply;
+    }
+
+    .growth-ambient {
+        position: absolute;
+        inset: 0;
+        z-index: -2;
+        overflow: hidden;
+        pointer-events: none;
+    }
+
+    .growth-ambient-word {
+        position: absolute;
+        top: 38vh;
+        right: -3vw;
+        font-family: "Cormorant Garamond", serif;
+        font-size: clamp(150px, 25vw, 390px);
+        font-weight: 500;
+        line-height: .7;
+        letter-spacing: -.07em;
+        color: rgba(179,155,130,.055);
+        transform: translate3d(0, calc(var(--growth-progress) * -110px), 0);
+        white-space: nowrap;
+        user-select: none;
+    }
+
+    .growth-orb {
+        position: absolute;
+        border: 1px solid rgba(129,145,122,.18);
+        border-radius: 50%;
+        filter: blur(.2px);
+    }
+
+    .growth-orb-a { width: 28vw; height: 28vw; top: 7vh; right: -10vw; }
+    .growth-orb-b { width: 12vw; height: 12vw; top: 64vh; left: -4vw; border-color: rgba(179,155,130,.2); }
+
+    .growth-sticky-chrome {
+        position: sticky;
+        top: 0;
+        z-index: 18;
+        height: 0;
+        pointer-events: none;
+    }
+
+    .growth-scroll-rail {
+        position: absolute;
+        top: 23vh;
+        left: clamp(14px, 2vw, 32px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        color: var(--growth-muted);
+    }
+
+    .growth-scroll-rail span {
+        writing-mode: vertical-rl;
+        font-size: 10px;
+        letter-spacing: .35em;
+        text-transform: uppercase;
+    }
+
+    .growth-rail-track {
+        position: relative;
+        width: 1px;
+        height: 35vh;
+        overflow: hidden;
+        background: rgba(179,155,130,.22);
+    }
+
+    .growth-rail-fill {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: calc(var(--growth-progress) * 100%);
+        background: var(--growth-sage);
+        box-shadow: 0 0 12px rgba(129,145,122,.35);
+    }
+
+    .growth-scroll-index {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 12px;
+        font-style: italic;
+        color: var(--growth-gold);
+    }
+
+    .growth-shell {
+        width: min(1440px, 100%);
+        margin: 0 auto;
+        overflow: clip;
+    }
+
+    .growth-hero {
+        position: relative;
+        min-height: 100vh;
+        padding: clamp(96px, 12vh, 140px) clamp(56px, 7vw, 112px) 64px;
+        display: grid;
+        grid-template-columns: minmax(0, 1.05fr) minmax(380px, .95fr);
+        align-items: center;
+        gap: clamp(42px, 7vw, 112px);
+        scroll-snap-align: start;
+    }
+
+    .growth-eyebrow,
+    .growth-section-kicker {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        margin-bottom: 28px;
+        color: var(--growth-gold);
+        font-size: 10px;
+        letter-spacing: .42em;
+        text-transform: uppercase;
+    }
+
+    .growth-eyebrow::before,
+    .growth-section-kicker::before {
+        content: "";
+        width: 52px;
+        height: 1px;
+        background: currentColor;
+        transform-origin: left;
+    }
+
+    .growth-display {
+        margin: 0;
+        font-family: "Noto Serif SC", "Source Han Serif SC", serif;
+        font-size: clamp(54px, 6.9vw, 106px);
+        font-weight: 400;
+        line-height: 1.08;
+        letter-spacing: -.04em;
+    }
+
+    .growth-display-line {
+        display: block;
+        overflow: hidden;
+        padding-bottom: .08em;
+    }
+
+    .growth-display-line > span {
+        display: inline-block;
+        transform: translateY(112%);
+    }
+
+    .growth-display-line:nth-child(2) {
+        margin-left: clamp(22px, 6vw, 104px);
+        color: var(--growth-sage);
+        font-style: italic;
+    }
+
+    .growth-hero-desc {
+        max-width: 650px;
+        margin: 32px 0 0;
+        padding-left: 24px;
+        border-left: 1px solid var(--growth-line);
+        color: #5f5750;
+        font-family: "Noto Serif SC", serif;
+        font-size: clamp(14px, 1.1vw, 17px);
+        line-height: 2;
+        letter-spacing: .05em;
+    }
+
+    .growth-evidence-strip {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        max-width: 680px;
+        margin-top: 42px;
+        border-top: 1px solid var(--growth-line);
+        border-bottom: 1px solid var(--growth-line);
+    }
+
+    .growth-evidence {
+        padding: 18px 18px 18px 0;
+    }
+
+    .growth-evidence + .growth-evidence {
+        padding-left: 20px;
+        border-left: 1px solid var(--growth-line);
+    }
+
+    .growth-evidence strong {
+        display: flex;
+        align-items: baseline;
+        min-height: 38px;
+        font-family: "Cormorant Garamond", "Noto Serif SC", serif;
+        font-size: 32px;
+        font-weight: 500;
+        line-height: 1;
+        color: var(--growth-ink);
+    }
+
+    .growth-evidence strong em {
+        margin-left: 4px;
+        font-family: "Noto Serif SC", serif;
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 400;
+        color: var(--growth-gold);
+    }
+
+    .growth-evidence > span {
+        display: block;
+        margin-top: 8px;
+        color: var(--growth-muted);
+        font-size: 10px;
+        letter-spacing: .12em;
+    }
+
+    .growth-hero-visual {
+        position: relative;
+        min-height: min(72vh, 670px);
+        display: grid;
+        place-items: center;
+        perspective: 1200px;
+    }
+
+    .growth-orbit-map {
+        position: relative;
+        width: min(34vw, 520px);
+        aspect-ratio: 1;
+        border-radius: 50%;
+        transform-style: preserve-3d;
+        transition: transform .55s cubic-bezier(.2,.8,.2,1);
+    }
+
+    .growth-orbit-ring {
+        position: absolute;
+        inset: var(--ring-inset);
+        border: 1px solid rgba(179,155,130,.3);
+        border-radius: 50%;
+    }
+
+    .growth-orbit-ring::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: -4px;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--growth-sage);
+        box-shadow: 0 0 0 7px rgba(129,145,122,.12);
+        transform: translateX(-50%);
+    }
+
+    .growth-orbit-ring:nth-child(1) { --ring-inset: 0%; animation: growthSpin 24s linear infinite; }
+    .growth-orbit-ring:nth-child(2) { --ring-inset: 15%; animation: growthSpinReverse 17s linear infinite; }
+    .growth-orbit-ring:nth-child(3) { --ring-inset: 30%; border-style: dashed; animation: growthSpin 13s linear infinite; }
+
+    @keyframes growthSpin { to { transform: rotate(360deg); } }
+    @keyframes growthSpinReverse { to { transform: rotate(-360deg); } }
+
+    .growth-orbit-axis {
+        position: absolute;
+        left: 50%;
+        top: 4%;
+        bottom: 4%;
+        width: 1px;
+        background: linear-gradient(transparent, rgba(179,155,130,.2), transparent);
+    }
+
+    .growth-orbit-axis::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: calc(-46% - 46vw / 2);
+        width: min(34vw, 520px);
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(179,155,130,.18), transparent);
+    }
+
+    .growth-orbit-core {
+        position: absolute;
+        inset: 38%;
+        z-index: 4;
+        display: grid;
+        place-content: center;
+        text-align: center;
+        border: 1px solid rgba(129,145,122,.34);
+        border-radius: 50%;
+        background: rgba(253,252,249,.78);
+        box-shadow: 0 30px 80px rgba(61,53,45,.1), inset 0 0 35px rgba(129,145,122,.08);
+        backdrop-filter: blur(9px);
+    }
+
+    .growth-orbit-core strong {
+        font-family: "Cormorant Garamond", serif;
+        font-size: clamp(24px, 2.8vw, 42px);
+        font-weight: 500;
+        line-height: .85;
+    }
+
+    .growth-orbit-core span {
+        margin-top: 9px;
+        color: var(--growth-gold);
+        font-size: 10px;
+        letter-spacing: .25em;
+        text-transform: uppercase;
+    }
+
+    .growth-orbit-node {
+        position: absolute;
+        z-index: 5;
+        min-width: 108px;
+        padding: 10px 14px;
+        border: 1px solid rgba(179,155,130,.28);
+        border-radius: 999px;
+        background: rgba(253,252,249,.8);
+        color: var(--growth-ink);
+        box-shadow: 0 12px 30px rgba(60,52,44,.07);
+        backdrop-filter: blur(8px);
+        font: inherit;
+        font-size: 10px;
+        letter-spacing: .12em;
+        cursor: default;
+        transition: color .3s, background .3s, border-color .3s, transform .3s;
+    }
+
+    .growth-orbit-node span {
+        margin-right: 6px;
+        color: var(--growth-gold);
+        font-family: "Cormorant Garamond", serif;
+        font-size: 13px;
+        font-style: italic;
+    }
+
+    .growth-orbit-node:hover {
+        color: #fff;
+        background: var(--growth-sage);
+        border-color: var(--growth-sage);
+        transform: translateY(-4px);
+    }
+
+    .growth-node-1 { top: 4%; left: 10%; }
+    .growth-node-2 { top: 25%; right: -5%; }
+    .growth-node-3 { bottom: 20%; right: -1%; }
+    .growth-node-4 { bottom: 5%; left: 6%; }
+    .growth-node-5 { top: 36%; left: -11%; }
+
+    .growth-visual-caption {
+        position: absolute;
+        right: 1%;
+        bottom: 2%;
+        max-width: 190px;
+        color: var(--growth-muted);
+        font-family: "Cormorant Garamond", serif;
+        font-size: 13px;
+        font-style: italic;
+        line-height: 1.5;
+        text-align: right;
+    }
+
+    .growth-visual-caption::before {
+        content: "";
+        display: block;
+        width: 42px;
+        height: 1px;
+        margin: 0 0 12px auto;
+        background: var(--growth-gold);
+    }
+
+    .growth-marquee {
+        overflow: hidden;
+        border-top: 1px solid var(--growth-line);
+        border-bottom: 1px solid var(--growth-line);
+        background: rgba(242,238,230,.46);
+    }
+
+    .growth-marquee-track {
+        display: flex;
+        width: max-content;
+        animation: growthMarquee 28s linear infinite;
+    }
+
+    .growth-marquee-group {
+        display: flex;
+        align-items: center;
+        gap: 34px;
+        padding: 15px 17px;
+        color: var(--growth-muted);
+        font-family: "Cormorant Garamond", "Noto Serif SC", serif;
+        font-size: 13px;
+        letter-spacing: .14em;
+        white-space: nowrap;
+    }
+
+    .growth-marquee-group i {
+        color: var(--growth-sage);
+        font-size: 7px;
+    }
+
+    @keyframes growthMarquee { to { transform: translateX(-50%); } }
+
+    .growth-section {
+        position: relative;
+        padding: clamp(110px, 15vh, 180px) clamp(56px, 7vw, 112px);
+        scroll-snap-align: start;
+    }
+
+    .growth-section-head {
+        display: grid;
+        grid-template-columns: minmax(250px,.65fr) minmax(400px,1fr);
+        align-items: end;
+        gap: 8vw;
+        margin-bottom: clamp(52px, 8vh, 88px);
+    }
+
+    .growth-section-title {
+        margin: 0;
+        font-family: "Noto Serif SC", serif;
+        font-size: clamp(42px, 5.2vw, 76px);
+        font-weight: 400;
+        line-height: 1.15;
+        letter-spacing: -.035em;
+    }
+
+    .growth-section-title em {
+        color: var(--growth-sage);
+        font-family: "Cormorant Garamond", serif;
+        font-weight: 400;
+    }
+
+    .growth-section-intro {
+        max-width: 600px;
+        margin: 0;
+        color: var(--growth-muted);
+        font-family: "Noto Serif SC", serif;
+        font-size: 14px;
+        line-height: 2;
+        letter-spacing: .04em;
+    }
+
+    .growth-section-note {
+        display: block;
+        margin-top: 16px;
+        color: var(--growth-gold);
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-size: 9px;
+        letter-spacing: .12em;
+    }
+
+    .growth-cases {
+        background: linear-gradient(180deg, transparent, rgba(242,238,230,.58) 14%, rgba(242,238,230,.36) 86%, transparent);
+    }
+
+    .growth-case-stage {
+        position: relative;
+        min-height: 590px;
+        padding: 20px;
+        border: 1px solid var(--growth-line);
+        background: rgba(253,252,249,.66);
+        box-shadow: 0 28px 90px rgba(54,47,40,.07);
+        backdrop-filter: blur(10px);
+    }
+
+    .growth-case-tabs {
+        position: relative;
+        z-index: 4;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+        width: min(560px, 100%);
+        padding: 5px;
+        border: 1px solid var(--growth-line);
+        background: rgba(253,252,249,.82);
+    }
+
+    .growth-case-tab {
+        position: relative;
+        overflow: hidden;
+        padding: 15px 18px;
+        border: 0;
+        background: transparent;
+        color: var(--growth-muted);
+        font: inherit;
+        font-size: 10px;
+        letter-spacing: .12em;
+        text-align: left;
+        cursor: pointer;
+        transition: color .3s, background .3s;
+    }
+
+    .growth-case-tab span {
+        display: block;
+        margin-bottom: 4px;
+        font-family: "Noto Serif SC", serif;
+        font-size: 15px;
+        font-weight: 500;
+        color: var(--growth-ink);
+        letter-spacing: .04em;
+    }
+
+    .growth-case-tab[aria-selected="true"] {
+        color: #fff;
+        background: var(--growth-sage);
+    }
+
+    .growth-case-tab[aria-selected="true"] span { color: #fff; }
+
+    .growth-case-tab:focus-visible {
+        outline: 1px solid rgba(245, 226, 183, .95);
+        outline-offset: -4px;
+    }
+
+    .growth-case-panel {
+        display: grid;
+        grid-template-columns: .72fr 1.28fr;
+        min-height: 500px;
+        padding: clamp(34px, 5vw, 72px) clamp(24px, 4vw, 62px) 24px;
+        gap: clamp(38px, 6vw, 92px);
+        align-items: center;
+    }
+
+    .growth-case-panel[hidden] { display: none; }
+
+    .growth-case-meta {
+        align-self: stretch;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 20px 0;
+    }
+
+    .growth-case-no {
+        color: rgba(179,155,130,.7);
+        font-family: "Cormorant Garamond", serif;
+        font-size: clamp(70px, 9vw, 132px);
+        font-style: italic;
+        line-height: .75;
+    }
+
+    .growth-case-company {
+        margin-top: 44px;
+        color: var(--growth-gold);
+        font-size: 11px;
+        letter-spacing: .23em;
+        text-transform: uppercase;
+    }
+
+    .growth-case-name {
+        margin: 12px 0 0;
+        font-family: "Noto Serif SC", serif;
+        font-size: clamp(30px, 3.5vw, 52px);
+        font-weight: 400;
+        line-height: 1.25;
+    }
+
+    .growth-case-summary {
+        margin: 24px 0 0;
+        color: var(--growth-muted);
+        font-size: 13px;
+        line-height: 1.9;
+    }
+
+    .growth-case-verdict {
+        margin-top: 32px;
+        padding: 16px 18px;
+        border-left: 2px solid var(--growth-sage);
+        background: var(--growth-sage-soft);
+        color: #5d6858;
+        font-family: "Noto Serif SC", serif;
+        font-size: 13px;
+        line-height: 1.8;
+    }
+
+    .growth-case-flow {
+        position: relative;
+    }
+
+    .growth-case-flow::before {
+        content: "";
+        position: absolute;
+        top: 36px;
+        bottom: 36px;
+        left: 22px;
+        width: 1px;
+        background: linear-gradient(var(--growth-gold), var(--growth-sage));
+        transform-origin: top;
+    }
+
+    .growth-flow-item {
+        position: relative;
+        display: grid;
+        grid-template-columns: 46px 95px 1fr;
+        align-items: start;
+        gap: 18px;
+        padding: 23px 0;
+        border-bottom: 1px solid rgba(179,155,130,.18);
+    }
+
+    .growth-flow-item:last-child { border-bottom: 0; }
+
+    .growth-flow-dot {
+        position: relative;
+        z-index: 2;
+        display: grid;
+        place-items: center;
+        width: 46px;
+        height: 46px;
+        border: 1px solid rgba(179,155,130,.38);
+        border-radius: 50%;
+        background: var(--growth-paper);
+        color: var(--growth-gold);
+        font-family: "Cormorant Garamond", serif;
+        font-size: 13px;
+        font-style: italic;
+    }
+
+    .growth-flow-label {
+        padding-top: 9px;
+        color: var(--growth-sage);
+        font-size: 10px;
+        letter-spacing: .2em;
+        text-transform: uppercase;
+    }
+
+    .growth-flow-content strong {
+        display: block;
+        margin-bottom: 8px;
+        font-family: "Noto Serif SC", serif;
+        font-size: 18px;
+        font-weight: 500;
+        letter-spacing: .04em;
+    }
+
+    .growth-flow-content p {
+        margin: 0;
+        color: var(--growth-muted);
+        font-size: 13px;
+        line-height: 1.8;
+    }
+
+    .growth-system-layout {
+        display: grid;
+        grid-template-columns: minmax(280px,.72fr) minmax(540px,1.28fr);
+        gap: clamp(60px, 9vw, 140px);
+        align-items: start;
+    }
+
+    .growth-system-copy {
+        position: sticky;
+        top: 16vh;
+        padding-bottom: 24vh;
+    }
+
+    .growth-system-copy .growth-section-title { font-size: clamp(46px, 4.8vw, 72px); }
+
+    .growth-system-copy .growth-section-intro {
+        margin-top: 34px;
+        padding-top: 26px;
+        border-top: 1px solid var(--growth-line);
+    }
+
+    .growth-system-formula {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+        margin-top: 30px;
+    }
+
+    .growth-system-formula span {
+        padding: 8px 12px;
+        border: 1px solid var(--growth-line);
+        color: var(--growth-muted);
+        font-size: 11px;
+        letter-spacing: .12em;
+    }
+
+    .growth-system-formula i {
+        color: var(--growth-gold);
+        font-family: "Cormorant Garamond", serif;
+        font-style: italic;
+    }
+
+    .growth-steps-stack { padding-bottom: 18vh; }
+
+    .growth-step-card {
+        position: sticky;
+        top: calc(13vh + var(--step-index) * 13px);
+        min-height: 320px;
+        margin-bottom: 14vh;
+        padding: clamp(28px, 4vw, 58px);
+        overflow: hidden;
+        border: 1px solid var(--growth-line);
+        border-radius: 28px;
+        background: rgba(255,255,255,.96);
+        box-shadow: 0 26px 70px rgba(79,91,83,.10);
+        transform-origin: top center;
+    }
+
+    .growth-step-card::before {
+        content: attr(data-step);
+        position: absolute;
+        right: -7px;
+        bottom: -32px;
+        color: rgba(179,155,130,.09);
+        font-family: "Cormorant Garamond", serif;
+        font-size: 180px;
+        font-style: italic;
+        line-height: 1;
+    }
+
+    .growth-step-top {
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        padding-bottom: 24px;
+        border-bottom: 1px solid var(--growth-line);
+    }
+
+    .growth-step-tag {
+        color: var(--growth-gold);
+        font-size: 10px;
+        letter-spacing: .28em;
+        text-transform: uppercase;
+    }
+
+    .growth-step-signal {
+        color: var(--growth-muted);
+        font-family: "Cormorant Garamond", serif;
+        font-size: 14px;
+        font-style: italic;
+    }
+
+    .growth-step-card h3 {
+        position: relative;
+        margin: 28px 0 16px;
+        font-family: "Noto Serif SC", serif;
+        font-size: clamp(28px, 3.4vw, 48px);
+        font-weight: 400;
+    }
+
+    .growth-step-card p {
+        position: relative;
+        max-width: 640px;
+        margin: 0;
+        color: var(--growth-muted);
+        font-size: 15px;
+        line-height: 1.95;
+    }
+
+    .growth-step-tools {
+        position: relative;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 28px;
+    }
+
+    .growth-step-tools span {
+        padding: 7px 11px;
+        border-radius: 999px;
+        background: var(--growth-sage-soft);
+        color: #667060;
+        font-size: 11px;
+        letter-spacing: .08em;
+    }
+
+    .growth-proof {
+        padding-top: 10vh;
+        background:
+            radial-gradient(circle at 16% 18%,rgba(243,223,227,.48),transparent 26rem),
+            radial-gradient(circle at 86% 70%,rgba(223,233,245,.56),transparent 29rem),
+            #fbf8f2;
+    }
+
+    .growth-proof-grid {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        grid-auto-rows: minmax(120px, auto);
+        gap: 14px;
+    }
+
+    .growth-proof-card {
+        position: relative;
+        overflow: hidden;
+        min-height: 240px;
+        padding: clamp(26px, 3vw, 42px);
+        border: 1px solid var(--growth-line);
+        border-radius: 24px;
+        background: rgba(255,255,255,.70);
+        transition: border-color .4s, box-shadow .4s, transform .4s;
+    }
+
+    .growth-proof-card:hover {
+        z-index: 2;
+        border-color: rgba(129,145,122,.55);
+        box-shadow: 0 25px 60px rgba(55,49,42,.1);
+        transform: translateY(-5px);
+    }
+
+    .growth-proof-card:nth-child(1) { grid-column: span 7; }
+    .growth-proof-card:nth-child(2) { grid-column: span 5; background: rgba(223,234,223,.72); }
+    .growth-proof-card:nth-child(3) { background: rgba(233,226,242,.58); }
+    .growth-proof-card:nth-child(4) { background: rgba(223,233,245,.62); }
+    .growth-proof-card:nth-child(3) { grid-column: span 4; }
+    .growth-proof-card:nth-child(4) { grid-column: span 8; }
+
+    .growth-proof-label {
+        color: var(--growth-gold);
+        font-size: 11px;
+        letter-spacing: .24em;
+        text-transform: uppercase;
+    }
+
+    .growth-proof-card h3 {
+        margin: 22px 0 14px;
+        font-family: "Noto Serif SC", serif;
+        font-size: clamp(24px, 3vw, 42px);
+        font-weight: 400;
+        line-height: 1.3;
+    }
+
+    .growth-proof-card p {
+        max-width: 690px;
+        margin: 0;
+        color: var(--growth-muted);
+        font-size: 13px;
+        line-height: 1.9;
+    }
+
+    .growth-proof-big {
+        display: block;
+        margin: 18px 0 4px;
+        color: var(--growth-sage);
+        font-family: "Cormorant Garamond", serif;
+        font-size: clamp(62px, 8vw, 110px);
+        font-weight: 500;
+        line-height: .82;
+    }
+
+    .growth-proof-list {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1px;
+        margin-top: 26px;
+        background: var(--growth-line);
+        border: 1px solid var(--growth-line);
+    }
+
+    .growth-proof-list div {
+        padding: 15px;
+        background: var(--growth-paper);
+    }
+
+    .growth-proof-list strong {
+        display: block;
+        margin-bottom: 5px;
+        font-family: "Noto Serif SC", serif;
+        font-size: 13px;
+        font-weight: 500;
+    }
+
+    .growth-proof-list span {
+        color: var(--growth-muted);
+        font-size: 10px;
+        line-height: 1.6;
+    }
+
+    .growth-proof-disclaimer {
+        margin-top: 24px;
+        color: #90877e;
+        font-size: 11px;
+        letter-spacing: .08em;
+        text-align: right;
+    }
+
+    .growth-ending {
+        min-height: 78vh;
+        padding: 15vh clamp(56px, 7vw, 112px) 10vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+
+    .growth-ending-mark {
+        width: 9px;
+        height: 9px;
+        margin-bottom: 40px;
+        border-radius: 50%;
+        background: var(--growth-sage);
+        box-shadow: 0 0 0 10px var(--growth-sage-soft), 0 0 0 21px rgba(129,145,122,.05);
+    }
+
+    .growth-ending h2 {
+        max-width: 1040px;
+        margin: 0;
+        font-family: "Noto Serif SC", serif;
+        font-size: clamp(42px, 6vw, 88px);
+        font-weight: 400;
+        line-height: 1.3;
+        letter-spacing: -.035em;
+    }
+
+    .growth-ending h2 em {
+        color: var(--growth-sage);
+        font-family: "Cormorant Garamond", serif;
+        font-weight: 400;
+    }
+
+    .growth-ending h2 > span { display: block; }
+
+    .growth-ending p {
+        max-width: 670px;
+        margin: 32px auto 0;
+        color: var(--growth-muted);
+        font-family: "Noto Serif SC", serif;
+        font-size: 14px;
+        line-height: 2;
+    }
+
+    .growth-end-actions {
+        display: flex;
+        align-items: center;
+        gap: 36px;
+        margin-top: 64px;
+    }
+
+    .growth-end-actions button {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        padding: 13px 2px;
+        border: 0;
+        border-bottom: 1px solid var(--growth-line);
+        background: transparent;
+        color: var(--growth-muted);
+        font: inherit;
+        font-size: 9px;
+        letter-spacing: .28em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: color .3s, border-color .3s;
+    }
+
+    .growth-end-actions button:hover {
+        color: var(--growth-ink);
+        border-color: var(--growth-sage);
+    }
+
+    .g-reveal {
+        opacity: 0;
+        transform: translateY(24px);
+        transition: opacity .52s ease, transform .62s cubic-bezier(.16,1,.3,1);
+    }
+
+    .g-reveal.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .growth-click-wave {
+        position: absolute;
+        z-index: 10;
+        width: 12px;
+        height: 12px;
+        border: 1px solid rgba(129,145,122,.55);
+        border-radius: 50%;
+        pointer-events: none;
+        animation: growthClickWave .75s ease-out forwards;
+    }
+
+    @keyframes growthClickWave {
+        from { opacity: .8; transform: translate(-50%,-50%) scale(0); }
+        to { opacity: 0; transform: translate(-50%,-50%) scale(10); }
+    }
+
+    @media (max-width: 1120px) {
+        .growth-hero { grid-template-columns: 1fr .82fr; }
+        .growth-orbit-map { width: min(41vw, 480px); }
+        .growth-case-panel { grid-template-columns: .82fr 1.18fr; }
+        .growth-system-layout { grid-template-columns: .68fr 1.32fr; gap: 60px; }
+    }
+
+    @media (max-width: 980px) {
+        .growth-page { scroll-snap-type: none; overflow: visible !important; }
+        .growth-page::before,
+        .growth-page::after { position: absolute; }
+        .growth-sticky-chrome { display: none; }
+        .growth-shell { overflow: hidden; }
+        .growth-hero {
+            min-height: auto;
+            padding: 110px 24px 80px;
+            grid-template-columns: 1fr;
+        }
+        .growth-display { font-size: clamp(49px, 13vw, 78px); }
+        .growth-display-line:nth-child(2) { margin-left: 0; }
+        .growth-hero-visual { min-height: 560px; }
+        .growth-orbit-map { width: min(78vw, 520px); }
+        .growth-section { padding: 100px 24px; }
+        .growth-section-head,
+        .growth-system-layout { grid-template-columns: 1fr; }
+        .growth-section-head { align-items: start; gap: 26px; }
+        .growth-case-panel { grid-template-columns: 1fr; }
+        .growth-case-meta { gap: 28px; }
+        .growth-case-no { font-size: 82px; }
+        .growth-system-copy { position: relative; top: auto; padding-bottom: 0; }
+        .growth-step-card { position: relative; top: auto; margin-bottom: 24px; }
+        .growth-proof-card:nth-child(n) { grid-column: span 12; }
+        .growth-ending { min-height: auto; padding: 120px 24px 100px; }
+    }
+
+    @media (max-width: 620px) {
+        .growth-eyebrow,
+        .growth-section-kicker { letter-spacing: .27em; gap: 12px; }
+        .growth-eyebrow::before,
+        .growth-section-kicker::before { width: 32px; }
+        .growth-hero-desc { padding-left: 16px; }
+        .growth-evidence-strip { grid-template-columns: 1fr; }
+        .growth-evidence,
+        .growth-evidence + .growth-evidence { padding: 14px 0; border-left: 0; border-top: 1px solid var(--growth-line); }
+        .growth-evidence:first-child { border-top: 0; }
+        .growth-hero-visual { min-height: 430px; }
+        .growth-orbit-map { width: min(82vw, 380px); }
+        .growth-orbit-node { min-width: 88px; padding: 8px 10px; font-size: 8px; }
+        .growth-node-2,
+        .growth-node-3 { right: -2%; }
+        .growth-node-5 { left: -4%; }
+        .growth-visual-caption { display: none; }
+        .growth-case-stage { padding: 8px; }
+        .growth-case-tabs { grid-template-columns: 1fr; }
+        .growth-case-panel { padding: 38px 18px 18px; }
+        .growth-flow-item { grid-template-columns: 40px 1fr; gap: 14px; }
+        .growth-flow-dot { width: 40px; height: 40px; }
+        .growth-flow-label { grid-column: 2; padding-top: 0; }
+        .growth-flow-content { grid-column: 2; }
+        .growth-case-flow::before { left: 20px; }
+        .growth-proof-list { grid-template-columns: 1fr; }
+        .growth-end-actions { flex-direction: column; gap: 12px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .growth-page { scroll-behavior: auto; }
+        .growth-orbit-ring,
+        .growth-marquee-track { animation: none !important; }
+        .g-reveal,
+        .growth-display-line > span,
+        .growth-orbit-map,
+        .growth-proof-card { transition-duration: .01ms !important; }
+    }
+</style>
+
+<div class="page-section growth-page internal-scroll" id="growthPage" data-bg="GROWTH">
+    <div class="growth-ambient" aria-hidden="true">
+        <div class="growth-ambient-word">GROWTH</div>
+        <div class="growth-orb growth-orb-a"></div>
+        <div class="growth-orb growth-orb-b"></div>
+    </div>
+
+    <div class="growth-sticky-chrome" aria-hidden="true">
+        <div class="growth-scroll-rail">
+            <span>Page progress</span>
+            <div class="growth-rail-track"><div class="growth-rail-fill"></div></div>
+            <div class="growth-scroll-index">01</div>
+        </div>
+    </div>
+
+    <div class="page-header-text">User &amp; Growth</div>
+
+    <main class="growth-shell">
+        <section class="growth-hero" aria-labelledby="growth-title">
+            <div class="growth-hero-copy">
+                <div class="growth-eyebrow g-reveal">Portfolio 05 &#183; Growth Strategy</div>
+                <h1 class="growth-display" id="growth-title">
+                    <span class="growth-display-line"><span>&#22686;&#38271;&#65292;&#19981;&#26159;<br>&#19968;&#27425;&#29190;&#21457;</span></span>
+                    <span class="growth-display-line"><span>&#26159;&#21487;&#22797;&#29992;&#30340;<br>&#31995;&#32479;</span></span>
+                </h1>
+                <p class="growth-hero-desc g-reveal">&#25105;&#25226;&#25968;&#25454;&#31185;&#23398;&#30340;&#20998;&#26512;&#33021;&#21147;&#65292;&#36716;&#35793;&#20026;&#29992;&#25143;&#27934;&#23519;&#12289;&#20869;&#23481;&#23454;&#39564;&#19982;&#28192;&#36947;&#20915;&#31574;&#65306;&#20174;&#21457;&#29616;&#20449;&#21495;&#65292;&#21040;&#39564;&#35777;&#36335;&#24452;&#65292;&#20877;&#25226;&#26377;&#25928;&#21160;&#20316;&#27785;&#28096;&#25104;&#21487;&#22797;&#21046;&#30340;&#22686;&#38271;&#26426;&#21046;&#12290;</p>
+
+                <div class="growth-evidence-strip g-reveal" aria-label="&#22686;&#38271;&#33021;&#21147;&#25688;&#35201;">
+                    <div class="growth-evidence">
+                        <strong><span class="g-counter" data-target="3">0</span><em>&#26465;</em></strong>
+                        <span>&#20135;&#21697;&#32447;&#30697;&#38453;&#36816;&#33829;</span>
+                    </div>
+                    <div class="growth-evidence">
+                        <strong><span class="g-counter" data-target="5">0</span><em>+ &#24179;&#21488;</em></strong>
+                        <span>&#28023;&#20869;&#22806;&#28192;&#36947;&#35206;&#30422;</span>
+                    </div>
+                    <div class="growth-evidence">
+                        <strong>0&#8594;1</strong>
+                        <span>&#20302;&#25104;&#26412;&#20869;&#23481;&#25289;&#26032;&#36335;&#24452;</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="growth-hero-visual g-reveal" aria-label="&#22686;&#38271;&#38381;&#29615;&#21160;&#24577;&#22270;">
+                <div class="growth-orbit-map g-tilt">
+                    <div class="growth-orbit-ring"></div>
+                    <div class="growth-orbit-ring"></div>
+                    <div class="growth-orbit-ring"></div>
+                    <div class="growth-orbit-axis"></div>
+                    <div class="growth-orbit-core"><strong>DATA<br>&#8594; DECISION</strong><span>Growth Loop</span></div>
+                    <button class="growth-orbit-node growth-node-1" type="button"><span>01</span>&#27934;&#23519; INSIGHT</button>
+                    <button class="growth-orbit-node growth-node-2" type="button"><span>02</span>&#35302;&#36798; REACH</button>
+                    <button class="growth-orbit-node growth-node-3" type="button"><span>03</span>&#36716;&#21270; CONVERT</button>
+                    <button class="growth-orbit-node growth-node-4" type="button"><span>04</span>&#30041;&#23384; RETAIN</button>
+                    <button class="growth-orbit-node growth-node-5" type="button"><span>05</span>&#22797;&#29992; SCALE</button>
+                </div>
+                <div class="growth-visual-caption">Every signal becomes a hypothesis.<br>Every result becomes a system.</div>
+            </div>
+        </section>
+
+        <div class="growth-marquee" aria-hidden="true">
+            <div class="growth-marquee-track">
+                <div class="growth-marquee-group"><span>USER INSIGHT</span><i>&#9679;</i><span>CONTENT ENGINE</span><i>&#9679;</i><span>KOL MATCHING</span><i>&#9679;</i><span>FUNNEL MONITORING</span><i>&#9679;</i><span>ROI REUSE</span><i>&#9679;</i></div>
+                <div class="growth-marquee-group"><span>USER INSIGHT</span><i>&#9679;</i><span>CONTENT ENGINE</span><i>&#9679;</i><span>KOL MATCHING</span><i>&#9679;</i><span>FUNNEL MONITORING</span><i>&#9679;</i><span>ROI REUSE</span><i>&#9679;</i></div>
+            </div>
+        </div>
+
+        <section class="growth-section growth-cases" aria-labelledby="growth-cases-title">
+            <div class="growth-section-head">
+                <div>
+                    <div class="growth-section-kicker g-reveal">Selected Growth Practice</div>
+                    <h2 class="growth-section-title g-reveal" id="growth-cases-title">两段经历，<br><em>我具体做了什么</em></h2>
+                </div>
+                <p class="growth-section-intro g-reveal">第一段负责内容、用户反馈和产品线运营；第二段负责市场数据、达人筛选和投放跟进。下面只写我承担的工作、做法和结果。</p>
+            </div>
+
+            <div class="growth-case-stage g-reveal">
+                <div class="growth-case-tabs" role="tablist" aria-label="&#22686;&#38271;&#39033;&#30446;&#20999;&#25442;">
+                    <button class="growth-case-tab" id="growth-tab-colorful" type="button" role="tab" aria-selected="true" aria-controls="growth-panel-colorful" data-case="colorful"><span>ColorfulWidget</span>&#20869;&#23481; &#215; &#29992;&#25143;&#22686;&#38271;</button>
+                    <button class="growth-case-tab" id="growth-tab-whoo" type="button" role="tab" aria-selected="false" aria-controls="growth-panel-whoo" data-case="whoo"><span>The Whoo &#22825;&#27668;&#20025;</span>&#25968;&#25454; &#215; KOL &#25237;&#25918;</button>
+                </div>
+
+                <article class="growth-case-panel" id="growth-panel-colorful" role="tabpanel" aria-labelledby="growth-tab-colorful" data-panel="colorful">
+                    <div class="growth-case-meta">
+                        <div>
+                            <div class="growth-case-no">01</div>
+                            <div class="growth-case-company">&#23736;&#36793;&#32593;&#32476; &#183; 2025.03-06</div>
+                            <h3 class="growth-case-name">每周独立完成内容生产，并用数据调整方向</h3>
+                            <p class="growth-case-summary">负责 3 条产品线的国内外平台运营，工作包括选题、脚本、视频制作、发布、数据跟踪和用户反馈整理。</p>
+                        </div>
+                        <div class="growth-case-verdict">结果：跑通低成本内容拉新；核心增长指标高于历史基线；整理出的多项功能建议获批上线，并收到正向用户反馈。</div>
+                    </div>
+                    <div class="growth-case-flow">
+                        <div class="growth-flow-item">
+                            <div class="growth-flow-dot">01</div><div class="growth-flow-label">Signal</div>
+                            <div class="growth-flow-content"><strong>监测热点和用户反馈，确定选题与功能机会</strong><p>整理多渠道反馈和核心指标，把高频问题归到内容选题或产品体验问题中。</p></div>
+                        </div>
+                        <div class="growth-flow-item">
+                            <div class="growth-flow-dot">02</div><div class="growth-flow-label">Action</div>
+                            <div class="growth-flow-content"><strong>每周完成选题、脚本、剪辑、发布和复盘</strong><p>用 LLM 辅助初稿和素材整理，最终由平台反馈和数据决定下一周怎么改。</p></div>
+                        </div>
+                        <div class="growth-flow-item">
+                            <div class="growth-flow-dot">03</div><div class="growth-flow-label">Scale</div>
+                            <div class="growth-flow-content"><strong>把有效选题扩展到其他平台和产品线</strong><p>按平台调整标题、开场和时长，同时把用户反馈交给产品侧跟进功能迭代。</p></div>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="growth-case-panel" id="growth-panel-whoo" role="tabpanel" aria-labelledby="growth-tab-whoo" data-panel="whoo" hidden>
+                    <div class="growth-case-meta">
+                        <div>
+                            <div class="growth-case-no">02</div>
+                            <div class="growth-case-company">&#20113;&#26234;&#36798;&#21019; &#183; 2025.09-11</div>
+                            <h3 class="growth-case-name">用数据筛选达人，并推动高效渠道复用</h3>
+                            <p class="growth-case-summary">围绕 The Whoo 天气丹等产品，负责市场数据整理、达人初筛、投放节点跟进、报表复盘和授权资料协同。</p>
+                        </div>
+                        <div class="growth-case-verdict">结果：完成 MCN 和博主分层筛选；整理标准化推广 SOP；识别高 ROI 渠道并推动长期授权，减少重复寻找资源的成本。</div>
+                    </div>
+                    <div class="growth-case-flow">
+                        <div class="growth-flow-item">
+                            <div class="growth-flow-dot">01</div><div class="growth-flow-label">Signal</div>
+                            <div class="growth-flow-content"><strong>抓取市场和推广数据，建立筛选依据</strong><p>按人群、产品特征和历史表现整理候选达人，先排除不匹配的账号，再进入人工复核。</p></div>
+                        </div>
+                        <div class="growth-flow-item">
+                            <div class="growth-flow-dot">02</div><div class="growth-flow-label">Action</div>
+                            <div class="growth-flow-content"><strong>跟进投放节点，及时调整名单和节奏</strong><p>持续记录触达、互动和转化信号；表现异常时回看达人匹配、素材和发布时间。</p></div>
+                        </div>
+                        <div class="growth-flow-item">
+                            <div class="growth-flow-dot">03</div><div class="growth-flow-label">Scale</div>
+                            <div class="growth-flow-content"><strong>保留高 ROI 资源，写进后续推广 SOP</strong><p>把有效渠道、合作条件和复盘口径写进报表与流程，方便后续直接复用。</p></div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section class="growth-section growth-system" aria-labelledby="growth-system-title">
+            <div class="growth-system-layout">
+                <div class="growth-system-copy">
+                    <div class="growth-section-kicker g-reveal">My Growth Operating System</div>
+                    <h2 class="growth-section-title g-reveal" id="growth-system-title">&#25105;&#22914;&#20309;&#35753;&#22686;&#38271;<br><em>&#25345;&#32493;&#21457;&#29983;</em></h2>
+                    <p class="growth-section-intro g-reveal">&#19981;&#26159;&#22871;&#29992; AARRR &#21517;&#35789;&#65292;&#32780;&#26159;&#25226;&#27599;&#19968;&#27493;&#21464;&#25104;&#28165;&#26224;&#30340;&#36755;&#20837;&#12289;&#21160;&#20316;&#12289;&#21028;&#26029;&#26631;&#20934;&#21644;&#19979;&#19968;&#27493;&#20915;&#31574;&#12290;</p>
+                    <div class="growth-system-formula g-reveal"><span>&#29992;&#25143;&#20449;&#21495;</span><i>&#215;</i><span>&#23567;&#27493;&#23454;&#39564;</span><i>&#215;</i><span>&#25968;&#25454;&#21453;&#39304;</span><i>&#215;</i><span>&#26426;&#21046;&#22797;&#29992;</span></div>
+                </div>
+
+                <div class="growth-steps-stack">
+                    <article class="growth-step-card g-reveal g-tilt" style="--step-index:0" data-step="01">
+                        <div class="growth-step-top"><span class="growth-step-tag">Insight / &#27934;&#23519;</span><span class="growth-step-signal">Input: &#29992;&#25143;&#12289;&#24066;&#22330;&#19982;&#34892;&#20026;&#20449;&#21495;</span></div>
+                        <h3>&#20808;&#23450;&#20041;&#8220;&#20026;&#20160;&#20040;&#22686;&#38271;&#8221;</h3>
+                        <p>&#20174;&#29992;&#25143;&#21453;&#39304;&#12289;&#25628;&#32034;&#28909;&#28857;&#12289;&#35780;&#35770;&#35821;&#20041;&#12289;&#24066;&#22330;&#36235;&#21183;&#19982;&#20135;&#21697;&#23450;&#20301;&#20013;&#23547;&#25214;&#30495;&#23454;&#38656;&#27714;&#65307;&#29992;&#25968;&#25454;&#29228;&#21462;&#21644;&#30011;&#20687;&#25286;&#35299;&#20943;&#23569;&#20027;&#35266;&#29468;&#27979;&#65292;&#35753;&#36873;&#39064;&#12289;&#21151;&#33021;&#21644;&#28192;&#36947;&#36873;&#25321;&#26377;&#20849;&#21516;&#20381;&#25454;&#12290;</p>
+                        <div class="growth-step-tools"><span>&#29992;&#25143;&#21453;&#39304;</span><span>Python &#29228;&#21462;</span><span>&#29992;&#25143;&#30011;&#20687;</span><span>&#24066;&#22330;&#30475;&#26495;</span></div>
+                    </article>
+
+                    <article class="growth-step-card g-reveal g-tilt" style="--step-index:1" data-step="02">
+                        <div class="growth-step-top"><span class="growth-step-tag">Experiment / &#39564;&#35777;</span><span class="growth-step-signal">Input: &#21487;&#39564;&#35777;&#20551;&#35774;</span></div>
+                        <h3>&#25226;&#31574;&#30053;&#25286;&#25104;&#23567;&#27493;&#23454;&#39564;</h3>
+                        <p>&#22260;&#32469;&#20869;&#23481;&#20027;&#39064;&#12289;&#34920;&#36798;&#26041;&#24335;&#12289;&#21457;&#24067;&#33410;&#22863;&#12289;&#24179;&#21488;&#35843;&#24615;&#21644;&#36798;&#20154;&#21305;&#37197;&#35774;&#35745;&#21487;&#27604;&#36739;&#21160;&#20316;&#65307;&#20197;&#21608;&#20026;&#33410;&#22863;&#23436;&#25104;&#29983;&#20135;&#19982;&#22797;&#30424;&#65292;&#29992;&#20302;&#25104;&#26412;&#35797;&#38169;&#25214;&#21040;&#26356;&#26377;&#25928;&#30340;&#35302;&#36798;&#36335;&#24452;&#12290;</p>
+                        <div class="growth-step-tools"><span>&#36873;&#39064;&#27744;</span><span>&#20869;&#23481;&#30697;&#38453;</span><span>&#24179;&#21488;&#36866;&#37197;</span><span>LLM &#25552;&#25928;</span></div>
+                    </article>
+
+                    <article class="growth-step-card g-reveal g-tilt" style="--step-index:2" data-step="03">
+                        <div class="growth-step-top"><span class="growth-step-tag">Decision / &#20915;&#31574;</span><span class="growth-step-signal">Input: &#28431;&#26007;&#19982;&#36807;&#31243;&#25351;&#26631;</span></div>
+                        <h3>&#29992;&#25968;&#25454;&#20915;&#23450;&#19979;&#19968;&#27493;&#65292;&#32780;&#38750;&#35777;&#26126;&#33258;&#24049;</h3>
+                        <p>&#21516;&#26102;&#35266;&#23519;&#26333;&#20809;&#12289;&#20114;&#21160;&#12289;&#36716;&#31881;&#12289;&#36716;&#21270;&#21644;&#28192;&#36947;&#36136;&#37327;&#65307;&#23545;&#24322;&#24120;&#27874;&#21160;&#36861;&#28335;&#20869;&#23481;&#19982;&#27969;&#31243;&#33410;&#28857;&#65292;&#35753;&#22797;&#30424;&#20135;&#20986;&#26126;&#30830;&#20915;&#31574;&#65306;&#32487;&#32493;&#12289;&#20248;&#21270;&#12289;&#20572;&#27490;&#25110;&#25918;&#22823;&#12290;</p>
+                        <div class="growth-step-tools"><span>&#28431;&#26007;&#30417;&#25511;</span><span>&#22522;&#32447;&#23545;&#27604;</span><span>&#24402;&#22240;&#22797;&#30424;</span><span>ROI &#21028;&#26029;</span></div>
+                    </article>
+
+                    <article class="growth-step-card g-reveal g-tilt" style="--step-index:3" data-step="04">
+                        <div class="growth-step-top"><span class="growth-step-tag">Compound / &#22797;&#21033;</span><span class="growth-step-signal">Output: &#21487;&#22797;&#21046;&#22686;&#38271;&#36164;&#20135;</span></div>
+                        <h3>&#25226;&#32467;&#26524;&#27785;&#28096;&#25104;&#32452;&#32455;&#36164;&#20135;</h3>
+                        <p>&#23558;&#26377;&#25928;&#36873;&#39064;&#12289;&#28192;&#36947;&#29305;&#24449;&#12289;&#36798;&#20154;&#31579;&#36873;&#36923;&#36753;&#21644;&#25237;&#25918;&#33410;&#28857;&#20889;&#20837; SOP &#19982;&#25968;&#25454;&#30475;&#26495;&#65307;&#36890;&#36807;&#38271;&#25928;&#25480;&#26435;&#21644;&#39640; ROI &#36164;&#28304;&#22797;&#29992;&#65292;&#35753;&#19968;&#27425;&#25104;&#21151;&#25104;&#20026;&#19979;&#19968;&#27425;&#22686;&#38271;&#30340;&#36215;&#28857;&#12290;</p>
+                        <div class="growth-step-tools"><span>&#25512;&#24191; SOP</span><span>&#28192;&#36947;&#26631;&#31614;</span><span>&#36164;&#28304;&#22797;&#29992;</span><span>&#38271;&#26399;&#25480;&#26435;</span></div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="growth-section growth-proof" aria-labelledby="growth-proof-title">
+            <div class="growth-section-head">
+                <div>
+                    <div class="growth-section-kicker g-reveal">Evidence, not decoration</div>
+                    <h2 class="growth-section-title g-reveal" id="growth-proof-title">&#22686;&#38271;&#33021;&#21147;&#65292;<br><em>&#33853;&#22312;&#34892;&#21160;&#35777;&#25454;&#37324;</em></h2>
+                </div>
+                <p class="growth-section-intro g-reveal">&#21463;&#19994;&#21153;&#20445;&#23494;&#38480;&#21046;&#65292;&#19981;&#29992;&#34394;&#26500; GMV &#25110;&#30334;&#20998;&#27604;&#21253;&#35013;&#25104;&#26524;&#12290;&#36825;&#37324;&#23637;&#31034;&#25105;&#30830;&#23454;&#20570;&#36807;&#30340;&#22686;&#38271;&#21160;&#20316;&#12289;&#35206;&#30422;&#33539;&#22260;&#19982;&#27785;&#28096;&#32467;&#26524;&#65292;&#35753;&#38754;&#35797;&#23448;&#21487;&#20197;&#32487;&#32493;&#36861;&#38382;&#65292;&#20063;&#32463;&#24471;&#36215;&#36861;&#38382;&#12290;<span class="growth-section-note">Verified by resume &#183; &#21487;&#22312;&#38754;&#35797;&#20013;&#23637;&#24320;&#36807;&#31243;&#19982;&#21028;&#26029;&#20381;&#25454;</span></p>
+            </div>
+
+            <div class="growth-proof-grid">
+                <article class="growth-proof-card g-reveal g-tilt">
+                    <div class="growth-proof-label">01 &#183; Cross-platform Growth</div>
+                    <h3>&#36328;&#24179;&#21488;&#19981;&#26159;&#22797;&#21046;&#31896;&#36148;&#65292;<br>&#32780;&#26159;&#37325;&#26032;&#21305;&#37197;&#20154;&#32676;&#19982;&#34920;&#36798;</h3>
+                    <p>&#35206;&#30422;&#25238;&#38899;&#12289;&#23567;&#32418;&#20070;&#12289;&#24555;&#25163;&#12289;TikTok&#12289;Instagram &#31561;&#28023;&#20869;&#22806;&#24179;&#21488;&#65292;&#29702;&#35299;&#19981;&#21516;&#24179;&#21488;&#30340;&#20869;&#23481;&#26426;&#21046;&#65292;&#24182;&#22260;&#32469;&#20135;&#21697;&#23450;&#20301;&#32452;&#32455;&#30697;&#38453;&#21270;&#35302;&#36798;&#12290;</p>
+                    <strong class="growth-proof-big">5+</strong>
+                </article>
+
+                <article class="growth-proof-card g-reveal g-tilt">
+                    <div class="growth-proof-label">02 &#183; Product Lines</div>
+                    <strong class="growth-proof-big">3</strong>
+                    <h3>&#20135;&#21697;&#32447;&#24182;&#34892;&#36816;&#33829;</h3>
+                    <p>&#22312;&#22810;&#20135;&#21697;&#32447;&#24182;&#34892;&#20013;&#21516;&#26102;&#22788;&#29702;&#29992;&#25143;&#21453;&#39304;&#12289;&#20869;&#23481;&#12289;&#28192;&#36947;&#19982;&#25968;&#25454;&#22797;&#30424;&#65292;&#20445;&#25345;&#31574;&#30053;&#19982;&#20135;&#21697;&#23450;&#20301;&#19968;&#33268;&#12290;</p>
+                </article>
+
+                <article class="growth-proof-card g-reveal g-tilt">
+                    <div class="growth-proof-label">03 &#183; Growth Engine</div>
+                    <h3>&#25968;&#25454; &#215; &#20869;&#23481; &#215; AI</h3>
+                    <p>&#29992; Python / SQL &#22788;&#29702;&#22686;&#38271;&#20449;&#21495;&#65292;&#29992; LLM &#25552;&#21319;&#20869;&#23481;&#20135;&#33021;&#65292;&#20877;&#29992;&#28431;&#26007;&#25351;&#26631;&#21028;&#26029;&#21738;&#20123;&#21160;&#20316;&#20540;&#24471;&#32487;&#32493;&#25237;&#20837;&#12290;</p>
+                </article>
+
+                <article class="growth-proof-card g-reveal g-tilt">
+                    <div class="growth-proof-label">04 &#183; Reusable Assets</div>
+                    <h3>&#25105;&#26368;&#32456;&#30041;&#19979;&#30340;&#65292;&#19981;&#21482;&#26159;&#19968;&#20221;&#25253;&#34920;</h3>
+                    <div class="growth-proof-list">
+                        <div><strong>&#26631;&#20934;&#21270;&#25512;&#24191; SOP</strong><span>&#26126;&#30830;&#20851;&#38190;&#33410;&#28857;&#12289;&#25968;&#25454;&#21475;&#24452;&#19982;&#22797;&#30424;&#33410;&#22863;</span></div>
+                        <div><strong>&#39640; ROI &#28192;&#36947;&#27744;</strong><span>&#29992;&#29983;&#21629;&#21608;&#26399;&#20215;&#20540;&#25903;&#25345;&#38271;&#25928;&#25480;&#26435;</span></div>
+                        <div><strong>&#29992;&#25143;&#21453;&#39304;&#26426;&#21046;</strong><span>&#25226;&#30495;&#23454;&#30171;&#28857;&#21453;&#21754;&#20135;&#21697;&#21151;&#33021;&#36845;&#20195;</span></div>
+                        <div><strong>&#20302;&#25104;&#26412;&#20869;&#23481;&#36335;&#24452;</strong><span>&#20197;&#21608;&#20026;&#21333;&#20301;&#25345;&#32493;&#29983;&#20135;&#12289;&#39564;&#35777;&#12289;&#20248;&#21270;</span></div>
+                    </div>
+                </article>
+            </div>
+            <div class="growth-proof-disclaimer">* &#39029;&#38754;&#20165;&#20351;&#29992;&#31616;&#21382;&#20013;&#21487;&#35777;&#23454;&#30340;&#39033;&#30446;&#33539;&#22260;&#19982;&#32467;&#26524;&#21475;&#24452;&#65292;&#26410;&#25259;&#38706;&#25968;&#25454;&#19981;&#20316;&#34394;&#26500;&#12290;</div>
+        </section>
+
+        <section class="growth-ending" aria-labelledby="growth-ending-title">
+            <div class="growth-ending-mark g-reveal"></div>
+            <h2 class="g-reveal" id="growth-ending-title"><span>&#25105;&#24076;&#26395;&#20570;&#30340;&#22686;&#38271;&#65292;</span><span>&#26159;&#35753;&#27599;&#19968;&#27425;&#34892;&#21160;</span><span>&#37117;&#25104;&#20026;&#19979;&#19968;&#27425;&#20915;&#31574;&#30340;</span><span><em>&#39640;&#36136;&#37327;&#36755;&#20837;</em>&#12290;</span></h2>
+            <p class="g-reveal">&#33021;&#27934;&#23519;&#29992;&#25143;&#65292;&#20063;&#33021;&#30475;&#25026;&#25968;&#25454;&#65307;&#33021;&#20570;&#20869;&#23481;&#65292;&#20063;&#33021;&#25512;&#21160;&#20135;&#21697;&#65307;&#26356;&#37325;&#35201;&#30340;&#26159;&#65292;&#25226;&#20598;&#28982;&#30340;&#22686;&#38271;&#65292;&#27785;&#28096;&#20026;&#22242;&#38431;&#21487;&#20197;&#37325;&#22797;&#20351;&#29992;&#30340;&#26041;&#27861;&#12290;</p>
+            <div class="growth-end-actions g-reveal">
+                <button class="page-prev" type="button"><i class="fa-solid fa-arrow-up"></i> Prev &#183; System</button>
+                <button class="page-next" type="button">Next &#183; Content <i class="fa-solid fa-arrow-down"></i></button>
+            </div>
+        </section>
+    </main>
+</div>
+
+<script>
+    (function initGrowthExperience() {
+        const page = document.getElementById('growthPage');
+        if (!page || page.dataset.growthReady === 'true') return;
+        page.dataset.growthReady = 'true';
+
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const mobileLayout = window.matchMedia('(max-width: 980px)').matches;
+        const observerRoot = null;
+        const revealItems = page.querySelectorAll('.g-reveal:not(.growth-step-card)');
+        const titleLines = page.querySelectorAll('.growth-display-line > span');
+        const heroSection = page.querySelector('.growth-hero');
+        const scrollIndex = page.querySelector('.growth-scroll-index');
+        const orbitMap = page.querySelector('.growth-orbit-map');
+
+        function revealHero() {
+            if (typeof gsap !== 'undefined' && !reducedMotion) {
+                gsap.to(titleLines, {
+                    y: 0,
+                    duration: 1.25,
+                    stagger: .14,
+                    delay: .18,
+                    ease: 'power4.out'
+                });
+            } else {
+                titleLines.forEach(line => line.style.transform = 'translateY(0)');
+            }
+        }
+
+        let heroPlayed = false;
+        const pageObserver = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting && !heroPlayed) {
+                heroPlayed = true;
+                revealHero();
+            }
+        }, { root: observerRoot, threshold: .16 });
+        pageObserver.observe(heroSection || page);
+
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { root: observerRoot, threshold: .01, rootMargin: '0px 0px 14% 0px' });
+        revealItems.forEach((item, index) => {
+            item.style.transitionDelay = Math.min((index % 4) * .035, .105) + 's';
+            revealObserver.observe(item);
+        });
+
+        const counterObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                const el = entry.target;
+                const target = Number(el.dataset.target || 0);
+                if (reducedMotion) {
+                    el.textContent = target;
+                } else {
+                    const start = performance.now();
+                    const duration = 1100;
+                    const tick = now => {
+                        const progress = Math.min((now - start) / duration, 1);
+                        const eased = 1 - Math.pow(1 - progress, 3);
+                        el.textContent = Math.round(target * eased);
+                        if (progress < 1) requestAnimationFrame(tick);
+                    };
+                    requestAnimationFrame(tick);
+                }
+                counterObserver.unobserve(el);
+            });
+        }, { root: observerRoot, threshold: .8 });
+        page.querySelectorAll('.g-counter').forEach(el => counterObserver.observe(el));
+
+        function updateGrowthScroll(progressValue) {
+            const progress = Math.min(Math.max(Number(progressValue) || 0, 0), 1);
+            page.style.setProperty('--growth-progress', progress.toFixed(4));
+            if (scrollIndex) scrollIndex.textContent = String(Math.min(4, Math.floor(progress * 4) + 1)).padStart(2, '0');
+
+            page.querySelectorAll('.growth-step-card').forEach((card, index) => {
+                if (window.innerWidth <= 980 || reducedMotion) return;
+                const rect = card.getBoundingClientRect();
+                const threshold = window.innerHeight * (.13 + index * .013);
+                const compressed = Math.min(Math.max((threshold - rect.top) / 560, 0), 1);
+                card.style.transform = `translate3d(0, ${compressed * index * 2}px, 0) scale(${1 - compressed * .018})`;
+                card.style.filter = 'none';
+            });
+        }
+        if (typeof ScrollTrigger !== 'undefined') {
+            ScrollTrigger.create({
+                id: 'growth-page-progress',
+                trigger: page,
+                start: 'top top',
+                end: 'bottom bottom',
+                onUpdate: self => updateGrowthScroll(self.progress)
+            });
+        }
+        updateGrowthScroll(0);
+
+        page.addEventListener('pointermove', event => {
+            const rect = page.getBoundingClientRect();
+            page.style.setProperty('--mx', ((event.clientX - rect.left) / rect.width * 100).toFixed(1) + '%');
+            page.style.setProperty('--my', ((event.clientY - rect.top) / rect.height * 100).toFixed(1) + '%');
+        }, { passive: true });
+
+        if (orbitMap && !reducedMotion) {
+            const visual = orbitMap.closest('.growth-hero-visual');
+            visual.addEventListener('pointermove', event => {
+                const rect = visual.getBoundingClientRect();
+                const x = (event.clientX - rect.left) / rect.width - .5;
+                const y = (event.clientY - rect.top) / rect.height - .5;
+                orbitMap.style.transform = `rotateX(${-y * 7}deg) rotateY(${x * 9}deg)`;
+            });
+            visual.addEventListener('pointerleave', () => orbitMap.style.transform = 'rotateX(0deg) rotateY(0deg)');
+        }
+
+        page.querySelectorAll('.g-tilt').forEach(card => {
+            if (card === orbitMap || card.classList.contains('growth-step-card') || reducedMotion) return;
+            card.addEventListener('pointermove', event => {
+                if (window.innerWidth <= 980) return;
+                const rect = card.getBoundingClientRect();
+                const x = (event.clientX - rect.left) / rect.width - .5;
+                const y = (event.clientY - rect.top) / rect.height - .5;
+                card.style.transform = `perspective(1000px) rotateX(${-y * 2.2}deg) rotateY(${x * 2.8}deg) translateY(-3px)`;
+            });
+            card.addEventListener('pointerleave', () => card.style.transform = '');
+        });
+
+        const tabs = Array.from(page.querySelectorAll('.growth-case-tab'));
+        const panels = Array.from(page.querySelectorAll('.growth-case-panel'));
+        function activateCase(name, focusTab) {
+            tabs.forEach(tab => {
+                const active = tab.dataset.case === name;
+                tab.setAttribute('aria-selected', String(active));
+                tab.tabIndex = active ? 0 : -1;
+                if (active && focusTab) tab.focus();
+            });
+            panels.forEach(panel => {
+                const active = panel.dataset.panel === name;
+                panel.hidden = !active;
+                if (active && typeof gsap !== 'undefined' && !reducedMotion) {
+                    gsap.fromTo(panel.querySelectorAll('.growth-case-meta > *, .growth-flow-item'),
+                        { y: 22, opacity: 0 },
+                        { y: 0, opacity: 1, duration: .75, stagger: .08, ease: 'power3.out' }
+                    );
+                }
+            });
+        }
+        tabs.forEach((tab, index) => {
+            tab.addEventListener('click', () => activateCase(tab.dataset.case, false));
+            tab.addEventListener('keydown', event => {
+                if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
+                event.preventDefault();
+                const next = event.key === 'ArrowRight' ? (index + 1) % tabs.length : (index - 1 + tabs.length) % tabs.length;
+                activateCase(tabs[next].dataset.case, true);
+            });
+        });
+
+        page.querySelectorAll('.growth-case-tab, .growth-step-card, .growth-proof-card').forEach(el => {
+            el.addEventListener('click', event => {
+                const rect = el.getBoundingClientRect();
+                const wave = document.createElement('span');
+                wave.className = 'growth-click-wave';
+                wave.style.left = (event.clientX - rect.left) + 'px';
+                wave.style.top = (event.clientY - rect.top) + 'px';
+                el.appendChild(wave);
+                wave.addEventListener('animationend', () => wave.remove(), { once: true });
+            });
+        });
+
+        window.playGrowthAnimation = function() {
+            if (!heroPlayed) {
+                heroPlayed = true;
+                revealHero();
+            }
+            updateGrowthScroll();
+        };
+    })();
+</script>

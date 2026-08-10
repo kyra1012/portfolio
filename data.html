@@ -1,0 +1,496 @@
+<style>
+    .data-page {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+        overflow-x: hidden;
+        overflow-y: auto;
+        background: #fffdf8;
+    }
+
+    .data-stage {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+        overflow: hidden;
+        background: #fffdf8;
+    }
+
+    .data-page-bg {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        background:
+            radial-gradient(circle at 16% 14%, rgba(247,232,232,.40), transparent 23%),
+            radial-gradient(circle at 78% 70%, rgba(229,240,230,.55), transparent 31%),
+            linear-gradient(118deg,#fffdf8 0 66%,#f8fbf6 100%);
+    }
+
+    /* 视觉统一的艺术感中文字体族 */
+    .art-font-title { font-family: "Source Han Serif SC", "Noto Serif SC", "方正清刻本悦宋", "华文楷体", serif; font-weight: 400; letter-spacing: 0.04em; }
+    .art-font-sub { font-family: "Source Han Serif SC", "Noto Serif SC", "华文楷体", serif; font-weight: 300; letter-spacing: 0.06em; }
+
+    /* --- 左侧海报文字栏 --- */
+    .data-copy {
+        position: absolute;
+        left: 6vw;
+        top: clamp(42px, 6vh, 78px);
+        z-index: 12;
+        width: min(480px, 32vw);
+    }
+    .data-copy .kicker {
+        display: flex; align-items: center; gap: 16px; margin-bottom: 28px;
+        font-family: "Plus Jakarta Sans", sans-serif; font-size: 11px; letter-spacing: 0.46em; color: #b39b82; text-transform: uppercase;
+    }
+    .data-copy .kicker::before { content: ""; width: 56px; height: 1px; background: #b39b82; }
+    .data-copy h1 {
+        margin: 0;
+        font-size: clamp(58px, 6vw, 88px);
+        line-height: 0.95;
+        color: #2c2724;
+    }
+    .data-copy p {
+        margin: 32px 0 0;
+        padding-top: 26px;
+        border-top: 1px solid rgba(179,155,130,0.3);
+        font-family: "PingFang SC", "Helvetica Neue", Helvetica, sans-serif;
+        font-size: 15px;
+        line-height: 2.1;
+        color: #59524b;
+        letter-spacing: 0.04em;
+    }
+        /* --- 新增：核心项目独立标题样式 --- */
+    .core-section-header {
+        position: absolute;
+        left: clamp(48px, 6vw, 96px);
+        /* 这里的 top 控制标题的垂直位置，数值越大越往下 */
+        top: clamp(38vh, 25vh, 28vh);
+        z-index: 12;
+        width: min(440px, 30vw);
+    }
+    .core-title {
+        position: relative;
+        margin: 0 0 16px 0;
+        font-size: clamp(52px, 8.2vw, 52px);
+        color: #2c2724;
+        width: 100%;
+        z-index: 1;
+    }
+
+    /* 🟢 新增：半透明豆沙绿错位色块 */
+    .core-title::before {
+        content: '';
+        position: absolute;
+        left: 22px;
+        top: 30px;
+        width: 46%;
+        height: 50%;
+        background: rgba(143, 161, 131, 0.15);
+        z-index: -1;
+        border-radius: 2px;
+
+    }
+
+    /* --- 左侧项目技能列表（展示硬核项目） --- */
+    .skill-list {
+        position: absolute;
+        left: clamp(48px, 6vw, 96px);
+        bottom: clamp(35px, 2vh, 52px);
+        z-index: 10;
+        width: min(440px, 30vw);
+        border-top: 1px solid rgba(179,155,130,0.3);
+    }
+    .skill-item { padding: 22px 0; border-bottom: 1px solid rgba(179,155,130,0.15); }
+    .skill-item strong {
+        display: block;
+        font-size: clamp(20px, 1.8vw, 28px);
+        color: #322c27;
+    }
+    .skill-item span {
+        display: block; margin-top: 8px;
+        font-family: "PingFang SC", "Helvetica Neue", Helvetica, sans-serif;
+        font-size: 13.5px;
+        color: #7b746d;
+        letter-spacing: 0.02em;
+        line-height: 1.6;
+    }
+
+    /* --- 树的布局 --- */
+    .tree-scene {
+        position: absolute;
+        inset: 0;
+        z-index: 5;
+        pointer-events: none;
+    }
+    .tree-art-img {
+        position: absolute;
+        right: 18vw; /* 向右滑动，让左侧留出更多空间给卡片 */
+        bottom: -2vh;
+        height: 105vh;
+        width: auto;
+        max-width: 50vw;
+        object-fit: contain;
+        transform-origin: bottom center;
+        filter: drop-shadow(0 20px 40px rgba(50,44,39,0.25)) contrast(1.05);
+        opacity: 0;
+    }
+
+    /* 🟢 新增：燕群定位与样式（将层级提高，防止被卡片或者树挡住） */
+    .bird-group {
+        position: absolute;
+        z-index: 16; /* 修改：将 z-index 从 8 提高到 16，确保它显眼地在卡片上方或空白处 */
+        pointer-events: none;
+        width: 230px;
+        height: auto;
+        left: 28vw;
+        top: 3vh;
+        opacity: 0;
+        transform-origin: bottom center;
+        filter: none !important;
+        box-shadow: none !important;
+    }
+
+    /* --- 右侧卡片放大、排版间距修复 --- */
+    .data-card {
+        position: absolute;
+        z-index: 14;
+        pointer-events: auto;
+        padding: 10px 12px 12px;
+        width: min(190px, 18vw);
+        border: 1px solid rgba(137,169,144,.26);
+        background: rgba(255,255,255,.94);
+        backdrop-filter: none;
+        border-radius: 20px;
+        box-shadow: 0 15px 35px rgba(50,44,39,0.08);
+        transition: transform 0.4s ease, box-shadow 0.4s ease;
+        opacity: 0;
+    }
+    .data-card:hover {
+        transform: translateY(-6px) scale(1.02) !important;
+        box-shadow: 0 30px 50px rgba(50,44,39,0.18);
+        z-index: 30;
+    }
+
+    .dot-connector {
+        position: absolute;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: #4a4540;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .tape-deco {
+        position: absolute;
+        width: 50px;
+        height: 16px;
+        background: rgba(143, 161, 131, 0.45);
+        z-index: 15;
+    }
+
+    .data-card small {
+        display: block; margin-bottom: 12px;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-size: 11px;
+        letter-spacing: 0.25em;
+        color: #b39b82;
+        text-transform: uppercase;
+    }
+    .data-card h2 {
+        margin: 0;
+        font-size: 20px;
+        color: #322c27;
+    }
+    .data-card p {
+        margin: 12px 0 0;
+        font-family: "PingFang SC", "Helvetica Neue", sans-serif;
+        font-size: 13px;
+        line-height: 2.0;
+        color: #6f6861;
+    }
+    .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 18px;
+    }
+    .tags span {
+        padding: 4px 10px;
+        border-radius: 2px;
+        border: 0.5px solid rgba(179,155,130,0.3);
+        background: rgba(255,255,255,0.6);
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-size: 11px;
+        color: #554e48;
+    }
+
+    /* ====================================================
+       精心排布的坐标：解决卡片堆叠重叠的问题
+       ==================================================== */
+    .card-crawl { left: 45vw; top: 8vh; width: min(265px, 20vw); }
+    .card-crawl .tape-deco { top: -6px; right: 10px; transform: rotate(12deg); }
+
+    .card-analysis { right: 8vw; top: 2vh; width: min(290px, 22vw); }
+    .card-analysis .tape-deco { top: -6px; left: 12px; transform: rotate(-8deg); width: 40px; }
+
+    .card-clean { left: 40vw; top: 46vh; width: min(250px, 20vw); }
+    .card-clean .dot-connector { top: -9px; right: 20px; }
+
+    .card-viz { right: 10vw; bottom: 35vh; width: min(260px, 20vw); }
+    .card-viz .dot-connector { top: -15px; left: 16px; width: 26px; height: 26px; }
+    .card-viz .tape-deco { top: -5px; left: 35px; transform: rotate(15deg); }
+
+    .floating-sentence {
+        position: absolute;
+        right: 12vw;
+        bottom: 10vh;
+        z-index: 13;
+        font-size: 18px;
+        line-height: 1.6;
+        color: #534e47;
+        font-family: "Cormorant Garamond", serif;
+        font-style: italic;
+        opacity: 0;
+        text-align: right;
+    }
+
+    .watermark {
+        position: absolute;
+        right: -1vw;
+        bottom: -2vw;
+        z-index: 2;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-size: 14vw;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        color: rgba(179,155,130,0.06);
+        pointer-events: none;
+    }
+
+    .data-archive {
+        position: relative;
+        min-height: 112vh;
+        padding: 92px 0 70px;
+        color: var(--pf-ink, #211f1b);
+        background:radial-gradient(circle at 13% 18%,rgba(229,240,230,.62),transparent 20rem),radial-gradient(circle at 88% 72%,rgba(231,241,247,.54),transparent 22rem),#fffdf8;
+        border-top: 1px solid rgba(33,31,27,.14);
+    }
+
+    .data-archive-shell { width: min(100% - 112px, 1420px); margin: 0 auto; }
+    .data-archive-top { display:flex; align-items:center; justify-content:space-between; padding-bottom:16px; border-bottom:1px solid rgba(33,31,27,.16); color:#626e67; font-family:'Plus Jakarta Sans',sans-serif; font-size:10px; letter-spacing:.18em; text-transform:uppercase; }
+    .data-archive-head { display:grid; grid-template-columns:.7fr 1.3fr; gap:56px; align-items:end; padding:48px 0 56px; }
+    .data-archive-head p { max-width:440px; margin:0; color:#56625b; font-family:'Plus Jakarta Sans','PingFang SC',sans-serif; font-size:14px; line-height:1.85; }
+    .data-archive-head h2 { margin:0; font-family:'Noto Serif SC',serif; font-size:clamp(48px,6vw,88px); font-weight:400; line-height:1.02; letter-spacing:-.045em; }
+    .data-archive-head h2 em { color:#7c8d76; font-weight:400; }
+
+    .data-case-list { border-top:1px solid rgba(33,31,27,.16); }
+    .data-case { display:grid; grid-template-columns:70px 1.2fr .95fr .85fr; gap:30px; align-items:center; min-height:164px; padding:28px 18px; border-bottom:1px solid rgba(33,31,27,.13); border-radius:22px; transition:transform .35s ease, background .35s ease, box-shadow .35s ease; }
+    .data-case:nth-child(1):hover { background:#f0f7f0; }
+    .data-case:nth-child(2):hover { background:#edf5fa; }
+    .data-case:nth-child(3):hover { background:#fbefef; }
+    .data-case:hover { transform:translateX(8px); box-shadow:0 18px 36px rgba(76,96,84,.08); }
+    .data-case-no { color:#b29372; font-family:'Cormorant Garamond',serif; font-size:22px; font-style:italic; }
+    .data-case h3 { margin:0 0 8px; font-family:'Noto Serif SC',serif; font-size:clamp(24px,2.2vw,34px); font-weight:400; }
+    .data-case-title span { color:#66736c; font-family:'Plus Jakarta Sans',sans-serif; font-size:10px; letter-spacing:.13em; text-transform:uppercase; }
+    .data-case dl { margin:0; }
+    .data-case dt { margin-bottom:8px; color:#78917c; font-family:'Plus Jakarta Sans',sans-serif; font-size:10px; letter-spacing:.14em; text-transform:uppercase; }
+    .data-case dd { margin:0; color:#4e5a54; font-family:'Plus Jakarta Sans','PingFang SC',sans-serif; font-size:13px; line-height:1.75; }
+    .data-case-result { justify-self:end; text-align:right; }
+    .data-case-result strong { display:block; font-family:'Cormorant Garamond','Noto Serif SC',serif; font-size:38px; font-weight:400; line-height:1; }
+    .data-case-result span { color:#66736c; font-family:'Plus Jakarta Sans',sans-serif; font-size:10px; letter-spacing:.1em; text-transform:uppercase; }
+
+    .data-pipeline { margin-top:64px; display:grid; grid-template-columns:repeat(4,1fr); border-top:1px solid rgba(33,31,27,.16); border-left:1px solid rgba(33,31,27,.16); }
+    .data-pipeline-item { min-height:150px; padding:20px; display:flex; flex-direction:column; justify-content:space-between; border-right:1px solid rgba(33,31,27,.16); border-bottom:1px solid rgba(33,31,27,.16); }
+    .data-pipeline-item span { color:#b29372; font-family:'Cormorant Garamond',serif; font-size:17px; font-style:italic; }
+    .data-pipeline-item b { font-family:'Noto Serif SC',serif; font-size:23px; font-weight:400; }
+    .data-archive-end { display:flex; justify-content:space-between; margin-top:58px; padding-top:22px; border-top:1px solid rgba(33,31,27,.16); }
+    .data-archive-end button { border:0; color:#6f685f; background:transparent; font-family:'Plus Jakarta Sans',sans-serif; font-size:9px; letter-spacing:.17em; text-transform:uppercase; cursor:pointer; }
+
+    @media (max-width: 980px) {
+        .data-page { height:auto; overflow:visible; }
+        .data-stage { height:100vh; min-height:760px; }
+        .data-archive { min-height:auto; padding:76px 0; }
+        .data-archive-shell { width:calc(100% - 40px); }
+        .data-archive-head { grid-template-columns:1fr; gap:24px; }
+        .data-case { grid-template-columns:44px 1fr; }
+        .data-case dl, .data-case-result { grid-column:2; justify-self:start; text-align:left; }
+        .data-pipeline { grid-template-columns:repeat(2,1fr); }
+    }
+</style>
+
+<div class="page-section data-page internal-scroll" id="dataPage">
+  <div class="data-stage">
+    <div class="data-page-bg"></div>
+
+    <section class="data-copy gs-reveal">
+        <div class="kicker">Data Portfolio</div>
+        <!-- 使用艺术感字体类 -->
+        <h1 class="art-font-title">数据<br>分析</h1>
+    </section>
+    <div class="core-section-header gs-reveal">
+        <h2 class="core-title art-font-title">方法概览</h2>
+    </div>
+
+    <section class="skill-list gs-reveal">
+        <div class="skill-item">
+            <strong class="art-font-title">采集真实数据</strong>
+            <span>从网页与平台接口获取数据，处理反爬、缺失和格式问题。</span>
+        </div>
+        <div class="skill-item">
+            <strong class="art-font-title">找到变化与原因</strong>
+            <span>用趋势、分类和对比回答业务问题，不停留在图表展示。</span>
+        </div>
+        <div class="skill-item">
+            <strong class="art-font-title">把结论讲清楚</strong>
+            <span>将分析结果转成可读的图表、判断依据和下一步建议。</span>
+        </div>
+    </section>
+
+    <section class="tree-scene" aria-label="手绘数据生长树">
+        <img src="./assets/bird.webp" alt="燕群" class="bird-group floating-card" loading="lazy" decoding="async" />
+        <img src="./assets/tree.webp" alt="数据生长树" class="tree-art-img" loading="lazy" decoding="async" />
+
+        <article class="data-card card-crawl floating-card gs-card">
+            <div class="tape-deco"></div>
+            <small>Acquisition</small>
+            <h2 class="art-font-title">数据爬取</h2>
+            <p>全栈式爬虫方案，深度适配多平台数据接口。运用 Requests、Scrapy、Selenium 实现分布式抓取与反爬策略应对。</p>
+            <div class="tags"><span>Python</span><span>Scrapy</span><span>Selenium</span></div>
+        </article>
+
+        <article class="data-card card-analysis floating-card gs-card">
+            <div class="tape-deco"></div>
+            <small>Core Capabilities</small>
+            <h2 class="art-font-title">核心技能</h2>
+            <p>精通 Python、Pandas、SQL 的全链路数据清洗；具备完整数据项目 0-1 落地经验；熟练运用 Tableau、ECharts 将数据可视化。</p>
+            <div class="tags"><span>Python爬虫</span><span>Pandas/SQL</span><span>Tableau/ECharts</span></div>
+        </article>
+
+        <article class="data-card card-clean floating-card gs-card">
+            <div class="dot-connector"></div>
+            <small>Cleaning</small>
+            <h2 class="art-font-title">清洗存储</h2>
+            <p>精细化清洗方法，解决缺失值、重复项及格式统一问题。结合 MySQL 与 Excel 进行维度聚合与特征工程，保障高质量分析数据。</p>
+            <div class="tags"><span>Pandas</span><span>SQL</span><span>特征工程</span></div>
+        </article>
+
+        <article class="data-card card-viz floating-card gs-card">
+            <div class="dot-connector"></div>
+            <div class="tape-deco"></div>
+            <small>Visualization</small>
+            <h2 class="art-font-title">可视化展现</h2>
+            <p>成熟运用 Tableau、ECharts 产出高交互商业图表。灵活运用多种图表组合，增强数据的商业质感与直观洞察力。</p>
+            <div class="tags"><span>Tableau</span><span>ECharts</span><span>Matplotlib</span></div>
+        </article>
+
+    </section>
+
+    <div class="floating-sentence gs-reveal">Life is a tree<br>full of possibilities.</div>
+    <div class="watermark">DATA</div>
+  </div>
+
+  <section class="data-archive" aria-labelledby="data-archive-title">
+    <div class="data-archive-shell data-archive-top"><span>Data Case Archive</span><span>02 / Evidence</span></div>
+    <div class="data-archive-shell data-archive-head">
+      <p>数据项目不是把图表做出来就结束。我更关心数据从哪里来、是否可信、能说明什么，以及最后能不能支持判断。</p>
+      <h2 id="data-archive-title">从原始数据，<br>走到<em>可用结论</em>。</h2>
+    </div>
+
+    <div class="data-archive-shell data-case-list">
+      <article class="data-case">
+        <span class="data-case-no">01</span>
+        <div class="data-case-title"><h3>豆瓣 · 小说全量可视化</h3><span>Market preference</span></div>
+        <dl><dt>Process</dt><dd>独立爬取、清洗并构建分析数据集；从评分、年代与词频观察市场偏好。</dd></dl>
+        <div class="data-case-result"><strong>1w+</strong><span>小说数据</span></div>
+      </article>
+      <article class="data-case">
+        <span class="data-case-no">02</span>
+        <div class="data-case-title"><h3>微博 · 热搜实时追踪</h3><span>Trend monitoring</span></div>
+        <dl><dt>Process</dt><dd>使用 Selenium 搭建自动监测脚本，记录话题热度变化与爆发节点。</dd></dl>
+        <div class="data-case-result"><strong>Top 20</strong><span>实时追踪</span></div>
+      </article>
+      <article class="data-case">
+        <span class="data-case-no">03</span>
+        <div class="data-case-title"><h3>京东 · 评论情感分类</h3><span>User feedback</span></div>
+        <dl><dt>Process</dt><dd>使用朴素贝叶斯、SVM 进行情感极性分类，定位商品评价中的真实痛点。</dd></dl>
+        <div class="data-case-result"><strong>86%</strong><span>分类准确率 / 4000+ 评论</span></div>
+      </article>
+    </div>
+
+    <div class="data-archive-shell data-pipeline" aria-label="数据分析流程">
+      <img class="data-pipeline-silk" src="./assets/set/已抠图素材/silk1.png" alt="" aria-hidden="true" loading="lazy" decoding="async">
+      <div class="data-pipeline-item"><span>01</span><b>采集 Acquisition</b></div>
+      <div class="data-pipeline-item"><span>02</span><b>清洗 Cleaning</b></div>
+      <div class="data-pipeline-item"><span>03</span><b>分析 Analysis</b></div>
+      <div class="data-pipeline-item"><span>04</span><b>呈现 Visualization</b></div>
+    </div>
+    <div class="data-archive-shell data-archive-end"><button class="page-prev" type="button">← Profile</button><button class="page-next" type="button">Next / Product →</button></div>
+  </section>
+</div>
+
+<script>
+    window.playDataTreeAnimation = function() {
+        if (window.dataTreeAnimated) return;
+        window.dataTreeAnimated = true;
+
+        const page = document.querySelector('.data-page');
+        if (!page) return;
+
+        const revealBlocks = page.querySelectorAll('.data-stage .gs-reveal');
+        const tree = page.querySelector('.tree-art-img');
+        const birds = page.querySelector('.bird-group');
+        const cards = page.querySelectorAll('.data-stage .gs-card');
+        const watermark = page.querySelector('.watermark');
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        if (typeof gsap === "undefined") {
+            [...revealBlocks, tree, birds, ...cards, watermark].filter(Boolean).forEach(element => {
+                element.style.opacity = '1';
+                element.style.visibility = 'visible';
+                element.style.clipPath = 'none';
+                element.style.transform = 'none';
+            });
+            return;
+        }
+
+        if (reduceMotion) {
+            gsap.set([...revealBlocks, tree, birds, ...cards, watermark].filter(Boolean), {
+                autoAlpha: 1,
+                clearProps: 'transform,clipPath'
+            });
+            return;
+        }
+
+        window.dataTreeTimeline?.kill();
+        window.dataTreeTimeline = gsap.timeline({
+            defaults: { ease: 'power3.out' }
+        });
+
+        window.dataTreeTimeline
+            .addLabel('intro', 0)
+            .fromTo(page.querySelector('.data-page-bg'),
+                { scale: 1.035 },
+                { scale: 1, duration: 1.35 },
+                'intro')
+            .fromTo(revealBlocks,
+                { autoAlpha: 0, y: 28, clipPath: 'inset(0 0 100% 0)' },
+                { autoAlpha: 1, y: 0, clipPath: 'inset(0 0 0% 0)', duration: .82, stagger: .11, clearProps: 'transform,clipPath' },
+                'intro+=.08')
+            .fromTo(tree,
+                { autoAlpha: 0, y: 24, scale: .985, clipPath: 'inset(100% 0 0 0)' },
+                { autoAlpha: 1, y: 0, scale: 1, clipPath: 'inset(0% 0 0 0)', duration: 1.5, clearProps: 'transform,clipPath' },
+                'intro+=.2')
+            .fromTo(birds,
+                { autoAlpha: 0, x: -34, y: 18, clipPath: 'inset(0 100% 0 0)' },
+                { autoAlpha: 1, x: 0, y: 0, clipPath: 'inset(0 0% 0 0)', duration: .9, clearProps: 'transform,clipPath' },
+                'intro+=.62')
+            .fromTo(cards,
+                { autoAlpha: 0, y: 34, scale: .97, clipPath: 'inset(0 0 100% 0)' },
+                { autoAlpha: 1, y: 0, scale: 1, clipPath: 'inset(0 0 0% 0)', duration: .86, stagger: .14, clearProps: 'transform,clipPath' },
+                'intro+=.72')
+            .fromTo(watermark,
+                { autoAlpha: 0, y: 22 },
+                { autoAlpha: 1, y: 0, duration: .9, clearProps: 'transform' },
+                'intro+=.94');
+    };
+</script>

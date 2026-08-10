@@ -1,0 +1,355 @@
+<style>
+    .fb-page {
+        --fb-ink: var(--pf-ink, #211f1b);
+        --fb-paper: var(--pf-paper, #f4f0e7);
+        --fb-sage: var(--pf-sage, #7c8d76);
+        --fb-bronze: var(--pf-bronze, #b29372);
+        --fb-line: var(--pf-line, rgba(33,31,27,.16));
+        height:100vh;
+        overflow-y:auto;
+        color:var(--fb-ink);
+        background:
+            radial-gradient(circle at 86% 14%, rgba(238,233,245,.48), transparent 20rem),
+            radial-gradient(circle at 10% 78%, rgba(247,232,232,.44), transparent 18rem),
+            #fffdf8;
+    }
+    .fb-page * { box-sizing:border-box; }
+    .fb-shell { width:min(100% - 112px,1420px); margin:0 auto; }
+    .fb-hero { position:relative; min-height:100vh; padding:38px 0 42px; display:grid; grid-template-rows:auto 1fr auto; overflow:hidden; }
+    .fb-hero::before { content:'FACE'; position:absolute; left:-4vw; bottom:-13vw; color:rgba(124,141,118,.065); font-family:var(--pf-display,Georgia,serif); font-size:31vw; line-height:.8; pointer-events:none; }
+    .fb-topline,.fb-gallery-top { position:relative; z-index:3; display:flex; justify-content:space-between; gap:24px; padding-bottom:17px; border-bottom:1px solid var(--fb-line); color:#746e65; font-family:var(--pf-sans,sans-serif); font-size:9px; letter-spacing:.2em; text-transform:uppercase; }
+    .fb-hero-grid { position:relative; z-index:2; display:grid; grid-template-columns:minmax(320px,.62fr) minmax(0,1.38fr); gap:clamp(42px,5vw,80px); align-items:center; padding:46px 0 30px; }
+    .fb-kicker { margin-bottom:20px; display:flex; align-items:center; gap:14px; color:#876d55; font-family:var(--pf-sans,sans-serif); font-size:10px; font-weight:600; letter-spacing:.2em; text-transform:uppercase; }
+    .fb-kicker::before { content:''; width:44px; height:1px; background:currentColor; }
+    .fb-title { margin:0 0 22px; font-family:var(--pf-display,Georgia,serif); font-size:clamp(64px,7vw,108px); font-weight:400; line-height:.88; letter-spacing:-.055em; }
+    .fb-title em { display:block; padding-left:.42em; color:var(--fb-sage); font-family:var(--pf-serif,serif); font-weight:400; }
+    .fb-intro { max-width:560px; margin:0 0 26px; color:#4d5b53; font-family:var(--pf-sans,'PingFang SC',sans-serif); font-size:15px; line-height:1.85; }
+    .fb-highlight-list { border-top:1px solid var(--fb-line); }
+    .fb-highlight { display:grid; grid-template-columns:32px 1fr; gap:12px; padding:13px 0; border-bottom:1px solid var(--fb-line); color:#4f5b54; font-family:var(--pf-sans,'PingFang SC',sans-serif); font-size:12px; line-height:1.75; }
+    .fb-highlight i { padding-top:3px; color:var(--fb-sage); }
+    .fb-highlight strong { font-weight:650; }
+    .fb-tag-list { margin-top:20px; display:flex; flex-wrap:wrap; gap:7px; }
+    .fb-tag { padding:7px 10px; border:1px solid var(--fb-line); border-radius:999px; background:rgba(255,255,255,.78); font-family:var(--pf-sans,sans-serif); font-size:10px; }
+    .fb-tag i { margin-right:5px; color:var(--fb-sage); }
+
+    .fb-video-card { position:relative; padding:7px; border:1px solid rgba(47,59,54,.12); border-radius:29px; background:#fff; box-shadow:0 28px 58px rgba(62,84,71,.13); transform:rotate(.2deg); transition:transform .6s cubic-bezier(.22,.72,.22,1),box-shadow .6s ease; }
+    .fb-video-card:hover { transform:rotate(0) translateY(-4px); box-shadow:0 34px 68px rgba(62,84,71,.16); }
+    .fb-video-head { position:absolute; z-index:3; left:24px; right:24px; top:19px; display:flex; justify-content:space-between; color:#5f6c64; font-family:var(--pf-sans,sans-serif); font-size:10px; letter-spacing:.14em; text-transform:uppercase; pointer-events:none; text-shadow:0 1px 8px rgba(255,255,255,.9); }
+    .fb-video-wrapper { position:relative; aspect-ratio:16/9; overflow:hidden; border-radius:22px; background:#eef3ef; }
+    .fb-video-wrapper video { width:100%; height:100%; object-fit:cover; display:block; border-radius:22px; }
+    .fb-speed-controls { display:flex; align-items:center; gap:6px; padding:10px 6px 3px; }
+    .fb-speed-controls .label { margin-right:auto; color:#657169; font-family:var(--pf-sans,sans-serif); font-size:10px; letter-spacing:.14em; text-transform:uppercase; }
+    .fb-speed-btn { min-width:42px; padding:7px 9px; border:1px solid var(--fb-line); border-radius:999px; color:#615b54; background:rgba(255,255,255,.68); font-family:var(--pf-sans,sans-serif); font-size:8px; cursor:pointer; transition:color .25s ease,background .25s ease; }
+    .fb-speed-btn.active,.fb-speed-btn:hover { color:#fffaf4; background:#4d5c53; }
+
+    .fb-hero-stats { position:relative; z-index:2; display:grid; grid-template-columns:repeat(4,1fr); gap:9px; }
+    .fb-stat { min-height:82px; padding:14px 16px; display:flex; flex-direction:column; justify-content:space-between; border:1px solid var(--fb-line); border-radius:18px; background:rgba(255,255,255,.58); }
+    .fb-stat b { font-family:var(--pf-display,serif); font-size:25px; font-weight:400; }
+    .fb-stat span { color:#7a736a; font-family:var(--pf-sans,sans-serif); font-size:8px; letter-spacing:.12em; text-transform:uppercase; }
+
+    .fb-gallery { min-height:132vh; padding:88px 0 80px; background:radial-gradient(circle at 16% 18%,rgba(229,240,230,.54),transparent 20rem),radial-gradient(circle at 89% 72%,rgba(231,241,247,.50),transparent 22rem),#fffdf8; border-top:1px solid var(--fb-line); overflow:hidden; }
+    .fb-gallery-head { display:grid; grid-template-columns:.7fr 1.3fr; gap:54px; align-items:end; padding:48px 0 56px; }
+    .fb-gallery-head p { max-width:430px; margin:0; color:#6d665e; font-family:var(--pf-sans,'PingFang SC',sans-serif); font-size:12px; line-height:1.9; }
+    .fb-gallery-head h2 { margin:0; font-family:var(--pf-serif,serif); font-size:clamp(48px,6vw,88px); font-weight:400; line-height:1; letter-spacing:-.05em; }
+    .fb-gallery-head h2 em { color:var(--fb-sage); font-weight:400; }
+    .fb-film-legend { margin:0 auto 24px; display:flex; flex-wrap:wrap; gap:8px; }
+    .fb-film-legend span { padding:8px 13px; border:1px solid var(--fb-line); border-radius:999px; color:#657069; background:rgba(255,255,255,.62); font-family:var(--pf-sans,sans-serif); font-size:8px; letter-spacing:.12em; text-transform:uppercase; }
+    .fb-film-wall { width:100%; display:grid; gap:10px; }
+    .fb-film-row { position:relative; width:100%; overflow:hidden; border:1px solid rgba(64,80,70,.14); border-radius:18px; background:#64786d; box-shadow:0 14px 34px rgba(73,88,78,.12); cursor:grab; touch-action:pan-y; }
+    .fb-film-row:nth-child(2) { width:calc(100% + 100px); margin-left:-100px; background:#718078; }
+    .fb-film-row.is-dragging { cursor:grabbing; }
+    .fb-film-row::before,.fb-film-row::after { content:''; position:absolute; z-index:5; left:0; right:0; height:9px; pointer-events:none; background:repeating-linear-gradient(90deg,#fffdf8 0 16px,transparent 16px 27px); opacity:.98; }
+    .fb-film-row::before { top:7px; }.fb-film-row::after { bottom:7px; }
+    .fb-film-track { width:max-content; display:flex; align-items:center; gap:9px; padding:24px 8px; }
+    .fb-shot { position:relative; flex:0 0 auto; width:max-content; height:276px; margin:0; padding:4px; overflow:hidden; border:0; border-radius:14px; background:#fffdf8; cursor:zoom-in; box-shadow:0 7px 18px rgba(21,31,26,.16); transition:transform .4s cubic-bezier(.22,.72,.22,1),box-shadow .4s ease; }
+    .fb-shot:hover { z-index:2; transform:translateY(-7px) rotate(-.35deg); box-shadow:0 18px 34px rgba(21,31,26,.26); }
+    .fb-shot img { width:auto; max-width:none; height:100%; object-fit:contain; display:block; border-radius:13px; }
+    .fb-shot figcaption { position:absolute; left:7px; right:7px; bottom:7px; padding:28px 12px 10px; display:flex; justify-content:space-between; align-items:flex-end; gap:12px; border-radius:0 0 13px 13px; color:#fff; background:linear-gradient(transparent,rgba(32,43,37,.76)); font-family:var(--pf-sans,'PingFang SC',sans-serif); font-size:9px; pointer-events:none; }
+    .fb-shot figcaption span:last-child { opacity:.72; font-size:7px; letter-spacing:.13em; text-transform:uppercase; }
+    .fb-gallery-end { display:flex; justify-content:space-between; margin-top:64px; padding-top:22px; border-top:1px solid var(--fb-line); }
+    .fb-gallery-end button { border:0; color:#6e675f; background:transparent; font-family:var(--pf-sans,sans-serif); font-size:9px; letter-spacing:.17em; text-transform:uppercase; cursor:pointer; }
+
+    .fb-viewer { position:fixed; z-index:1100; inset:0; display:grid; grid-template-rows:70px 1fr 66px; color:var(--fb-paper); background:rgba(18,18,16,.97); opacity:0; visibility:hidden; clip-path:inset(48% 0 48% 0); transition:opacity .35s ease,visibility .35s ease,clip-path .7s cubic-bezier(.77,0,.18,1); }
+    .fb-viewer.is-open { opacity:1; visibility:visible; clip-path:inset(0); }
+    .fb-viewer-head { padding:0 28px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid rgba(244,240,231,.18); }
+    .fb-viewer-title { font-family:var(--pf-serif,serif); font-size:18px; }
+    .fb-viewer-close { width:44px; height:44px; border:0; color:inherit; background:transparent; font-size:24px; cursor:pointer; }
+    .fb-viewer-stage { position:relative; min-height:0; padding:22px 80px; display:grid; place-items:center; }
+    .fb-viewer-stage img { max-width:100%; max-height:100%; object-fit:contain; box-shadow:0 22px 70px rgba(0,0,0,.35); }
+    .fb-viewer-nav { position:absolute; top:50%; width:48px; height:48px; margin-top:-24px; border:1px solid rgba(244,240,231,.2); border-radius:50%; color:inherit; background:transparent; cursor:pointer; }
+    .fb-viewer-prev { left:20px; }.fb-viewer-next { right:20px; }
+    .fb-viewer-foot { display:flex; align-items:center; justify-content:center; gap:18px; border-top:1px solid rgba(244,240,231,.18); color:rgba(244,240,231,.58); font-family:var(--pf-sans,sans-serif); font-size:8px; letter-spacing:.16em; text-transform:uppercase; }
+    .fb-in { opacity:0; transform:translateY(30px); transition:opacity .75s ease,transform .9s cubic-bezier(.22,.72,.22,1); }
+    .fb-in.is-visible { opacity:1; transform:translateY(0); }
+
+    @media (max-width:1100px) { .fb-shell{width:calc(100% - 70px)} .fb-shot{height:250px} }
+    @media (max-width:980px) {
+        .fb-page{height:auto;overflow:visible}.fb-shell{width:calc(100% - 40px)}.fb-hero-grid{grid-template-columns:1fr;padding-top:76px}.fb-title{font-size:clamp(66px,19vw,104px)}.fb-hero-stats{grid-template-columns:repeat(2,1fr)}.fb-gallery{min-height:auto;padding:78px 0}.fb-gallery-head{grid-template-columns:1fr;gap:24px}.fb-film-wall{gap:16px}.fb-film-row{border-radius:22px}.fb-film-row:nth-child(2){width:calc(100% + 70px);margin-left:-70px}.fb-shot{height:205px}.fb-viewer-stage{padding:16px 54px}
+    }
+</style>
+
+<div class="facebeauty-section page-section fb-page internal-scroll" id="facebeautyAnchor">
+    <section class="fb-hero" aria-labelledby="fb-title">
+        <div class="fb-shell fb-topline"><span>FaceBeauty - 个人项目介绍</span><span>Portfolio 04 / Independent Project</span></div>
+        <div class="fb-shell fb-hero-grid">
+            <div>
+                <div class="fb-kicker fb-in">个人独立搭建项目介绍 / Core System</div>
+                <h1 class="fb-title fb-in" id="fb-title">Face<em>Beauty</em></h1>
+                <p class="fb-intro fb-in">我独立完成的审美分析系统：从数据采集、模型分析到前端呈现，完整跑通产品闭环。</p>
+                <div class="fb-highlight-list fb-in">
+                    <div class="fb-highlight"><i class="fa-solid fa-database"></i><div><strong>全链路数据处理：</strong>独立完成数据爬取、清洗、分析与可视化全流程，成功构建高可用的审美可视化数据看板。</div></div>
+                    <div class="fb-highlight"><i class="fa-solid fa-eye"></i><div><strong>AI深度视觉分析：</strong>作为核心功能模块，通过深度学习模型精准输出用户面部分析数据与个性化美学建议。</div></div>
+                    <div class="fb-highlight"><i class="fa-solid fa-layer-group"></i><div><strong>前后端全栈搭建：</strong>一人主导完成从底层算法端、数据处理端到前端用户交互界面的完整系统搭建。</div></div>
+                </div>
+                <div class="fb-tag-list fb-in">
+                    <span class="fb-tag"><i class="fa-solid fa-chart-pie"></i>全链路数据处理</span><span class="fb-tag"><i class="fa-solid fa-face-smile"></i>AI深度视觉分析</span><span class="fb-tag"><i class="fa-solid fa-code"></i>前后端全栈搭建</span><span class="fb-tag"><i class="fa-solid fa-file-pdf"></i>数据可视化看板</span>
+                </div>
+            </div>
+            <div class="fb-video-card fb-in" id="videoPanel">
+                <div class="fb-video-head"><span>Product Demo</span><span>16:9 / Video</span></div>
+                <div class="fb-video-wrapper">
+                    <video id="demoVideo" controls preload="metadata" playsinline><source src="./assets/video/facebeauty-demo-site-lite.mp4" type="video/mp4">您的浏览器不支持视频播放。</video>
+                    <button class="fb-video-play" id="demoVideoPlay" type="button" aria-label="播放 FaceBeauty 产品演示">
+                        <span class="fb-video-play-icon" aria-hidden="true"><i class="fa-solid fa-play"></i></span>
+                        <span class="fb-video-play-copy"><b>播放产品演示</b><small>04:57 · 从数据到交互的完整闭环</small></span>
+                    </button>
+                    <span class="fb-video-watch">Watch the case</span>
+                </div>
+                <div class="fb-speed-controls"><span class="label">Speed</span><button class="fb-speed-btn" data-speed="0.5">0.5×</button><button class="fb-speed-btn active" data-speed="1">1.0×</button><button class="fb-speed-btn" data-speed="1.5">1.5×</button><button class="fb-speed-btn" data-speed="2">2.0×</button></div>
+            </div>
+        </div>
+        <div class="fb-shell fb-hero-stats fb-in">
+            <div class="fb-stat"><b>0→1</b><span>独立完成系统搭建</span></div><div class="fb-stat"><b>Full-stack</b><span>前端 / 后端 / 数据</span></div><div class="fb-stat"><b>AI Vision</b><span>面部特征分析</span></div><div class="fb-stat"><b>Dashboard</b><span>交互可视化</span></div>
+        </div>
+    </section>
+
+    <section class="fb-gallery" aria-labelledby="fb-gallery-title">
+        <div class="fb-shell fb-gallery-top"><span>Interface Exhibition</span><span>Click any screen to inspect</span></div>
+        <div class="fb-shell fb-gallery-head">
+            <p class="fb-in">从用户进入、智能测算、个性化建议，到趋势洞察和后台运营，界面不是单独的页面，而是一套完整产品链路。</p>
+            <h2 class="fb-in" id="fb-gallery-title">不是概念稿，<br>是<em>完整跑通的系统</em>。</h2>
+        </div>
+        <div class="fb-shell fb-film-legend"><span>按住胶片可拖拽</span><span>User journey</span><span>Analysis</span><span>Operation</span></div>
+        <div class="fb-film-wall fb-in" aria-label="FaceBeauty 双排胶片界面墙">
+            <div class="fb-film-row" data-direction="1">
+                <div class="fb-film-track">
+                    <figure class="fb-shot"><img loading="lazy" decoding="async" src="./assets/Facebeauty/引导页.webp" alt="FaceBeauty 引导页"><figcaption><span>引导页</span><span>User journey / 01</span></figcaption></figure>
+                    <figure class="fb-shot"><img loading="lazy" decoding="async" src="./assets/Facebeauty/登录页.webp" alt="FaceBeauty 登录页"><figcaption><span>登录页</span><span>User journey / 02</span></figcaption></figure>
+                    <figure class="fb-shot"><img loading="lazy" decoding="async" src="./assets/Facebeauty/欢迎页.webp" alt="FaceBeauty 欢迎页"><figcaption><span>欢迎页</span><span>User journey / 03</span></figcaption></figure>
+                    <figure class="fb-shot"><img loading="lazy" decoding="async" src="./assets/Facebeauty/智能分析首页.webp" alt="FaceBeauty 智能分析首页"><figcaption><span>智能分析首页</span><span>Analysis / 01</span></figcaption></figure>
+                    <figure class="fb-shot"><img loading="lazy" decoding="async" src="./assets/Facebeauty/五官维度分析.webp" alt="五官维度分析"><figcaption><span>五官维度分析</span><span>Analysis / 02</span></figcaption></figure>
+                    <figure class="fb-shot"><img loading="lazy" decoding="async" src="./assets/Facebeauty/六维美学雷达.webp" alt="六维美学雷达"><figcaption><span>六维美学雷达</span><span>Analysis / 03</span></figcaption></figure>
+                    <figure class="fb-shot"><img loading="lazy" decoding="async" src="./assets/Facebeauty/个性化色彩建议.webp" alt="个性化色彩建议"><figcaption><span>个性化色彩建议</span><span>Suggestion / 01</span></figcaption></figure>
+                    <figure class="fb-shot"><img loading="lazy" decoding="async" src="./assets/Facebeauty/个性化穿搭建议.webp" alt="个性化穿搭建议"><figcaption><span>个性化穿搭建议</span><span>Suggestion / 02</span></figcaption></figure>
+                    <figure class="fb-shot"><img loading="lazy" decoding="async" src="./assets/Facebeauty/个人名片与测算历史.webp" alt="个人名片与测算历史"><figcaption><span>个人名片与测算历史</span><span>Profile / 01</span></figcaption></figure>
+                </div>
+            </div>
+            <div class="fb-film-row" data-direction="-1">
+                <div class="fb-film-track">
+                    <figure class="fb-shot"><img loading="lazy" decoding="async" src="./assets/Facebeauty/历年冠军巡礼.webp" alt="历年冠军巡礼"><figcaption><span>历年冠军巡礼</span><span>Insight / 01</span></figcaption></figure>
+                    <figure class="fb-shot"><img loading="lazy" decoding="async" src="./assets/Facebeauty/历年Top10人物画廊.webp" alt="历年Top10人物画廊"><figcaption><span>历年 Top10 人物画廊</span><span>Insight / 02</span></figcaption></figure>
+                    <figure class="fb-shot"><img loading="lazy" decoding="async" src="./assets/Facebeauty/审美趋势演变.webp" alt="审美趋势演变"><figcaption><span>审美趋势演变</span><span>Insight / 03</span></figcaption></figure>
+                    <figure class="fb-shot"><img loading="lazy" decoding="async" src="./assets/Facebeauty/地理分布热力图.webp" alt="地理分布热力图"><figcaption><span>地理分布热力图</span><span>Insight / 04</span></figcaption></figure>
+                    <figure class="fb-shot"><img loading="lazy" decoding="async" src="./assets/Facebeauty/相似明星星云图.webp" alt="相似明星星云图"><figcaption><span>相似明星星云图</span><span>Insight / 05</span></figcaption></figure>
+                    <figure class="fb-shot"><img loading="lazy" decoding="async" src="./assets/Facebeauty/后台管理.webp" alt="后台管理"><figcaption><span>后台管理</span><span>Operation / 01</span></figcaption></figure>
+                    <figure class="fb-shot"><img loading="lazy" decoding="async" src="./assets/Facebeauty/账号管控面板.webp" alt="账号管控面板"><figcaption><span>账号管控面板</span><span>Operation / 02</span></figcaption></figure>
+                    <figure class="fb-shot"><img loading="lazy" decoding="async" src="./assets/Facebeauty/系统审计日记.webp" alt="系统审计日记"><figcaption><span>系统审计日记</span><span>Operation / 03</span></figcaption></figure>
+                    <figure class="fb-shot"><img loading="lazy" decoding="async" src="./assets/Facebeauty/模拟真实上线种子数据.webp" alt="模拟真实上线种子数据"><figcaption><span>模拟真实上线种子数据</span><span>Operation / 04</span></figcaption></figure>
+                </div>
+            </div>
+        </div>
+        <div class="fb-shell fb-gallery-end"><button class="page-prev" type="button">← Product</button><button class="page-next" type="button">Next / Growth →</button></div>
+    </section>
+
+    <div class="fb-viewer" id="fbViewer" role="dialog" aria-modal="true" aria-hidden="true" aria-label="FaceBeauty 界面查看器">
+        <div class="fb-viewer-head"><span class="fb-viewer-title">Screen</span><button class="fb-viewer-close" type="button" aria-label="关闭界面查看器">×</button></div>
+        <div class="fb-viewer-stage"><button class="fb-viewer-nav fb-viewer-prev" type="button" aria-label="上一张">←</button><img src="" alt=""><button class="fb-viewer-nav fb-viewer-next" type="button" aria-label="下一张">→</button></div>
+        <div class="fb-viewer-foot"><span class="fb-viewer-count">01 / 18</span><span>Arrow keys / Esc</span></div>
+    </div>
+</div>
+
+<script>
+(() => {
+    const page = document.getElementById('facebeautyAnchor');
+    if (!page || page.dataset.fbReady) return;
+    page.dataset.fbReady = 'true';
+    const video = page.querySelector('#demoVideo');
+    const videoPlay = page.querySelector('#demoVideoPlay');
+    const syncVideoState = () => page.querySelector('#videoPanel')?.classList.toggle('is-playing', Boolean(video && !video.paused && !video.ended));
+    videoPlay?.addEventListener('click', () => {
+        if (!video) return;
+        if (video.paused || video.ended) video.play().catch(() => {});
+        else video.pause();
+    });
+    video?.addEventListener('play', syncVideoState);
+    video?.addEventListener('pause', syncVideoState);
+    video?.addEventListener('ended', syncVideoState);
+    page.querySelectorAll('.fb-speed-btn').forEach(button => button.addEventListener('click', () => {
+        if (!video) return;
+        video.playbackRate = Number(button.dataset.speed) || 1;
+        page.querySelectorAll('.fb-speed-btn').forEach(item => item.classList.remove('active'));
+        button.classList.add('active');
+    }));
+
+    const mobile = window.matchMedia('(max-width: 980px)').matches;
+    const observer = new IntersectionObserver(entries => entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+    }), { root: null, threshold: .1, rootMargin: '0px 0px -5% 0px' });
+    page.querySelectorAll('.fb-in').forEach((item, index) => {
+        item.style.transitionDelay = Math.min((index % 4) * .05, .15) + 's';
+        observer.observe(item);
+    });
+
+    const shots = [...page.querySelectorAll('.fb-film-track .fb-shot')];
+    shots.forEach((shot, index) => { shot.dataset.viewerIndex = index; });
+
+    page.querySelectorAll('.fb-film-row').forEach((row, rowIndex) => {
+        row.tabIndex = 0;
+        row.setAttribute('role', 'region');
+        row.setAttribute('aria-label', '可拖拽浏览的界面胶片，使用左右方向键也可切换');
+        const track = row.querySelector('.fb-film-track');
+        const originals = [...track.children];
+        originals.forEach(item => {
+            item.querySelector('img').loading = 'eager';
+            const clone = item.cloneNode(true);
+            clone.querySelector('img').loading = 'lazy';
+            track.appendChild(clone);
+        });
+
+        const direction = Number(row.dataset.direction) || 1;
+        let paused = false;
+        let dragging = false;
+        let moved = false;
+        let inView = false;
+        let startX = 0;
+        let startScroll = 0;
+        let lastTime = 0;
+        let lastPointerX = 0;
+        let lastPointerAt = 0;
+        let pointerVelocity = 0;
+
+        const rowObserver = new IntersectionObserver(entries => {
+            inView = entries[0].isIntersecting;
+        }, { root: null, threshold: .03 });
+        rowObserver.observe(row);
+
+        const halfWidth = () => track.scrollWidth / 2;
+        const setReverseStart = () => {
+            if (direction < 0 && row.scrollLeft < 2) row.scrollLeft = halfWidth();
+        };
+        window.setTimeout(setReverseStart, 120 + rowIndex * 80);
+        track.querySelectorAll('img').forEach(image => image.addEventListener('load', setReverseStart, { once: true }));
+
+        function animate(time) {
+            if (!lastTime) lastTime = time;
+            const delta = Math.min(time - lastTime, 32);
+            lastTime = time;
+            if (inView && !paused && !dragging && track.scrollWidth > row.clientWidth) {
+                row.scrollLeft += direction * delta * .062;
+                const half = halfWidth();
+                if (direction > 0 && row.scrollLeft >= half) row.scrollLeft -= half;
+                if (direction < 0 && row.scrollLeft <= 0) row.scrollLeft += half;
+            }
+            requestAnimationFrame(animate);
+        }
+        requestAnimationFrame(animate);
+
+        row.addEventListener('mouseenter', () => { paused = true; });
+        row.addEventListener('mouseleave', () => { if (!dragging) paused = false; });
+        row.addEventListener('pointerdown', event => {
+            if (typeof gsap !== 'undefined') gsap.killTweensOf(row);
+            dragging = true;
+            moved = false;
+            paused = true;
+            startX = event.clientX;
+            startScroll = row.scrollLeft;
+            lastPointerX = event.clientX;
+            lastPointerAt = performance.now();
+            pointerVelocity = 0;
+            row.classList.add('is-dragging');
+            row.setPointerCapture(event.pointerId);
+        });
+        row.addEventListener('pointermove', event => {
+            if (!dragging) return;
+            const distance = event.clientX - startX;
+            const now = performance.now();
+            const elapsed = Math.max(now - lastPointerAt, 1);
+            pointerVelocity = (event.clientX - lastPointerX) / elapsed;
+            lastPointerX = event.clientX;
+            lastPointerAt = now;
+            if (Math.abs(distance) > 5) moved = true;
+            row.scrollLeft = startScroll - distance;
+        });
+        const stopDrag = () => {
+            if (!dragging) return;
+            dragging = false;
+            row.classList.remove('is-dragging');
+            row.dataset.dragMoved = moved ? 'true' : 'false';
+            window.setTimeout(() => { row.dataset.dragMoved = 'false'; }, 80);
+            if (moved && typeof gsap !== 'undefined' && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                const half = halfWidth();
+                gsap.to(row, {
+                    scrollLeft: row.scrollLeft - pointerVelocity * 260,
+                    duration: .82,
+                    ease: 'power3.out',
+                    overwrite: 'auto',
+                    onUpdate: () => {
+                        if (row.scrollLeft >= half) row.scrollLeft -= half;
+                        if (row.scrollLeft <= 0) row.scrollLeft += half;
+                    },
+                    onComplete: () => { paused = false; }
+                });
+            } else {
+                paused = false;
+            }
+        };
+        row.addEventListener('pointerup', stopDrag);
+        row.addEventListener('pointercancel', stopDrag);
+        row.addEventListener('keydown', event => {
+            if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
+            event.preventDefault();
+            paused = true;
+            const amount = Math.max(row.clientWidth * .62, 280);
+            const target = row.scrollLeft + (event.key === 'ArrowRight' ? amount : -amount);
+            if (typeof gsap !== 'undefined') {
+                gsap.to(row, { scrollLeft: target, duration: .62, ease: 'power3.inOut', overwrite: 'auto', onComplete: () => { paused = false; } });
+            } else {
+                row.scrollTo({ left: target, behavior: 'smooth' });
+                window.setTimeout(() => { paused = false; }, 650);
+            }
+        });
+    });
+
+    const viewer = page.querySelector('#fbViewer');
+    const viewerImage = viewer.querySelector('img');
+    const viewerTitle = viewer.querySelector('.fb-viewer-title');
+    const viewerCount = viewer.querySelector('.fb-viewer-count');
+    let activeIndex = 0;
+
+    function showShot(index) {
+        activeIndex = (index + shots.length) % shots.length;
+        const source = shots[activeIndex].querySelector('img');
+        viewerImage.src = source.src;
+        viewerImage.alt = source.alt;
+        viewerTitle.textContent = source.alt;
+        viewerCount.textContent = String(activeIndex + 1).padStart(2, '0') + ' / ' + shots.length;
+    }
+    function openViewer(index) { showShot(index); viewer.classList.add('is-open'); viewer.setAttribute('aria-hidden','false'); page.style.overflow='hidden'; viewer.querySelector('.fb-viewer-close').focus(); }
+    function closeViewer() { viewer.classList.remove('is-open'); viewer.setAttribute('aria-hidden','true'); page.style.overflow=''; }
+    page.querySelectorAll('.fb-shot').forEach(shot => shot.addEventListener('click', () => {
+        if (shot.closest('.fb-film-row')?.dataset.dragMoved === 'true') return;
+        openViewer(Number(shot.dataset.viewerIndex));
+    }));
+    viewer.querySelector('.fb-viewer-close').addEventListener('click', closeViewer);
+    viewer.querySelector('.fb-viewer-prev').addEventListener('click', () => showShot(activeIndex - 1));
+    viewer.querySelector('.fb-viewer-next').addEventListener('click', () => showShot(activeIndex + 1));
+    document.addEventListener('keydown', event => {
+        if (!viewer.classList.contains('is-open')) return;
+        if (event.key === 'Escape') closeViewer();
+        if (event.key === 'ArrowLeft') showShot(activeIndex - 1);
+        if (event.key === 'ArrowRight') showShot(activeIndex + 1);
+    });
+})();
+</script>

@@ -1,0 +1,198 @@
+<style>
+    .product-page {
+        --p-ink: var(--pf-ink, #211f1b);
+        --p-paper: var(--pf-paper, #f4f0e7);
+        --p-sage: var(--pf-sage, #7c8d76);
+        --p-bronze: var(--pf-bronze, #b29372);
+        --p-line: var(--pf-line, rgba(33,31,27,.16));
+        height: 100vh;
+        overflow-y: auto;
+        color: var(--p-ink);
+        background:radial-gradient(circle at 84% 16%,rgba(231,241,247,.54),transparent 20rem),radial-gradient(circle at 14% 78%,rgba(247,232,232,.44),transparent 19rem),#fffdf8;
+    }
+
+    .product-page * { box-sizing: border-box; }
+    .product-shell { width: min(100% - 112px, 1420px); margin: 0 auto; }
+    .product-cover { position:relative; min-height:100vh; padding:38px 0 42px; display:grid; grid-template-rows:auto 1fr auto; overflow:hidden; }
+    .product-cover::before { content:'PRODUCT'; position:absolute; right:-5vw; bottom:-8vw; color:rgba(124,141,118,.07); font-family:var(--pf-display,Georgia,serif); font-size:20vw; line-height:.8; pointer-events:none; }
+    .product-topline, .product-files-top { position:relative; z-index:2; display:flex; justify-content:space-between; gap:24px; padding-bottom:17px; border-bottom:1px solid var(--p-line); color:#746e65; font-family:var(--pf-sans,sans-serif); font-size:9px; letter-spacing:.2em; text-transform:uppercase; }
+
+    .product-hero { position:relative; z-index:2; display:grid; grid-template-columns:minmax(0,1.05fr) minmax(390px,.75fr); gap:clamp(60px,9vw,150px); align-items:center; padding:48px 0 38px; }
+    .product-kicker { margin-bottom:23px; display:flex; align-items:center; gap:14px; color:var(--p-bronze); font-family:var(--pf-sans,sans-serif); font-size:9px; letter-spacing:.24em; text-transform:uppercase; }
+    .product-kicker::before { content:''; width:46px; height:1px; background:currentColor; }
+    .product-title { margin:0; font-family:var(--pf-serif,Georgia,serif); font-size:clamp(64px,8vw,122px); font-weight:400; line-height:.91; letter-spacing:-.065em; }
+    .product-title em { display:block; padding-left:.48em; color:var(--p-sage); font-weight:400; }
+    .product-subtitle { margin:25px 0 18px; color:var(--p-bronze); font-family:var(--pf-display,Georgia,serif); font-size:21px; font-style:italic; }
+    .product-desc { max-width:670px; margin:0; color:#536059; font-family:var(--pf-sans,'PingFang SC',sans-serif); font-size:15px; line-height:1.85; }
+
+    .product-index { border-top:1px solid var(--p-line); }
+    .product-index-row { width:100%; min-height:76px; padding:0; display:grid; grid-template-columns:42px 1fr auto; gap:14px; align-items:center; border:0; border-bottom:1px solid var(--p-line); color:inherit; background:transparent; text-align:left; cursor:pointer; transition:padding .3s ease, background .3s ease; }
+    .product-index-row:hover { padding:0 14px; background:rgba(124,141,118,.1); }
+    .product-index-row span:first-child { color:var(--p-bronze); font-family:var(--pf-display,serif); font-size:17px; font-style:italic; }
+    .product-index-row b { font-family:var(--pf-serif,serif); font-size:18px; font-weight:500; }
+    .product-index-row em { color:#657169; font-family:var(--pf-sans,sans-serif); font-size:10px; font-style:normal; letter-spacing:.12em; text-transform:uppercase; }
+
+    .product-metrics { position:relative; z-index:2; display:grid; grid-template-columns:repeat(3,1fr); gap:9px; }
+    .product-metric { min-height:88px; padding:15px 18px; display:flex; align-items:flex-end; justify-content:space-between; border:1px solid var(--p-line); border-radius:18px; background:rgba(255,255,255,.58); }
+    .product-metric strong { font-family:var(--pf-display,serif); font-size:29px; font-weight:400; }
+    .product-metric span { color:#667169; font-family:var(--pf-sans,sans-serif); font-size:10px; letter-spacing:.1em; text-transform:uppercase; }
+
+    .product-files { min-height:150vh; padding:96px 0 86px; background:radial-gradient(circle at 14% 18%,rgba(229,240,230,.55),transparent 20rem),radial-gradient(circle at 89% 74%,rgba(238,233,245,.48),transparent 22rem),#fffdf8; border-top:1px solid var(--p-line); }
+    .product-files-head { display:grid; grid-template-columns:.7fr 1.3fr; gap:55px; align-items:end; padding:48px 0 54px; }
+    .product-files-head p { max-width:430px; margin:0; color:#55615a; font-family:var(--pf-sans,'PingFang SC',sans-serif); font-size:14px; line-height:1.85; }
+    .product-files-head h2 { margin:0; font-family:var(--pf-serif,serif); font-size:clamp(48px,6vw,88px); font-weight:400; line-height:1; letter-spacing:-.05em; }
+    .product-files-head h2 em { color:var(--p-sage); font-weight:400; }
+    .product-swap-hint { margin:-30px 0 30px; color:#66736c; font-family:var(--pf-sans,sans-serif); font-size:10px; letter-spacing:.13em; text-transform:uppercase; }
+
+    .product-file-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:14px; }
+    .product-file { position:relative; min-height:590px; padding:32px; display:flex; flex-direction:column; border:1px solid rgba(47,59,54,.13); border-radius:28px; overflow:hidden; transition:background .4s ease, transform .4s ease,box-shadow .4s ease,border-color .4s ease; }
+    .product-file:nth-child(1) { background:linear-gradient(145deg,#fbf4d9,#fffdf8 70%); }
+    .product-file:nth-child(2) { background:linear-gradient(145deg,#e5f0e6,#fffdf8 70%); }
+    .product-file:nth-child(3) { background:linear-gradient(145deg,#e7f1f7,#fffdf8 70%); }
+    .product-file:nth-child(4) { background:linear-gradient(145deg,#f7e8e8,#fffdf8 70%); }
+    .product-file:hover,.product-file.is-active { z-index:2; transform:translateY(-8px); border-color:rgba(137,169,144,.56); box-shadow:0 26px 52px rgba(79,105,89,.13),inset 0 0 0 7px rgba(255,255,255,.42); }
+    .product-file::after { content:attr(data-no); position:absolute; right:-.02em; bottom:-.24em; color:rgba(33,31,27,.045); font-family:var(--pf-display,serif); font-size:280px; line-height:1; pointer-events:none; }
+    .product-file-top { position:relative; z-index:1; display:flex; justify-content:space-between; color:#5c6962; font-family:var(--pf-sans,sans-serif); font-size:10px; letter-spacing:.14em; text-transform:uppercase; }
+    .product-file-icon { position:relative; z-index:1; width:54px; height:54px; margin:62px 0 24px; display:grid; place-items:center; border:1px solid var(--p-line); border-radius:50%; color:var(--p-sage); font-size:18px; }
+    .product-file h3 { position:relative; z-index:1; margin:0 0 20px; font-family:var(--pf-serif,serif); font-size:clamp(30px,3vw,46px); font-weight:400; line-height:1.08; }
+    .product-summary { position:relative; z-index:1; margin:0 0 24px; padding:16px 0; border-top:1px solid var(--p-line); border-bottom:1px solid var(--p-line); color:#435149; font-family:var(--pf-sans,'PingFang SC',sans-serif); font-size:13px; font-weight:600; line-height:1.75; }
+    .product-summary i { margin-right:7px; color:var(--p-bronze); }
+    .product-bullets { position:relative; z-index:1; margin:0; padding:0 0 0 18px; display:grid; gap:13px; color:#526058; font-family:var(--pf-sans,'PingFang SC',sans-serif); font-size:13px; line-height:1.78; }
+    .product-bullets .highlight { color:var(--p-sage); font-weight:650; }
+    .product-tags { position:relative; z-index:1; margin-top:auto; padding-top:24px; display:flex; flex-wrap:wrap; gap:7px; }
+    .product-tags span { padding:8px 11px; border:1px solid var(--p-line); border-radius:999px; background:rgba(255,255,255,.78); font-family:var(--pf-sans,sans-serif); font-size:10px; }
+
+    .product-end { display:flex; justify-content:space-between; margin-top:62px; padding-top:22px; border-top:1px solid var(--p-line); }
+    .product-end button { border:0; color:#6f685f; background:transparent; font-family:var(--pf-sans,sans-serif); font-size:9px; letter-spacing:.17em; text-transform:uppercase; cursor:pointer; }
+    .product-in { opacity:0; transform:translateY(30px); transition:opacity .75s ease, transform .9s cubic-bezier(.22,.72,.22,1); }
+    .product-in.is-visible { opacity:1; transform:translateY(0); }
+
+    @media (max-width:980px) {
+        .product-page { height:auto; overflow:visible; }
+        .product-shell { width:calc(100% - 40px); }
+        .product-hero { grid-template-columns:1fr; padding-top:76px; }
+        .product-title { font-size:clamp(62px,19vw,100px); }
+        .product-files { min-height:auto; padding:78px 0; }
+        .product-files-head { grid-template-columns:1fr; gap:24px; }
+        .product-file-grid { grid-template-columns:1fr; }
+        .product-file { min-height:570px; }
+    }
+</style>
+
+<div class="page-section product-page internal-scroll" id="productPage">
+    <section class="product-cover" aria-labelledby="product-title">
+        <div class="product-shell product-topline"><span>Portfolio 02 / Product &amp; Project</span><span>产品与项目 - 卡片堆叠</span></div>
+        <div class="product-shell product-hero">
+            <div>
+                <div class="product-kicker product-in">Product &amp; Project</div>
+                <h1 class="product-title product-in" id="product-title">产品，<em>把判断落地</em></h1>
+                <div class="product-subtitle product-in">Card Swap Mechanic / Capability archive</div>
+                <p class="product-desc product-in">我能从用户反馈里找到问题，画出方案、理清流程，并跟到真正上线。</p>
+            </div>
+            <div class="product-index product-in" aria-label="产品能力索引">
+                <button class="product-index-row" type="button" data-target="product-file-1"><span>01</span><b>需求与功能规划</b><em>Insight</em></button>
+                <button class="product-index-row" type="button" data-target="product-file-2"><span>02</span><b>原型与界面搭建</b><em>Figma</em></button>
+                <button class="product-index-row" type="button" data-target="product-file-3"><span>03</span><b>业务流与状态梳理</b><em>Flow</em></button>
+                <button class="product-index-row" type="button" data-target="product-file-4"><span>04</span><b>项目推进与协作</b><em>Manage</em></button>
+            </div>
+        </div>
+        <div class="product-shell product-metrics product-in">
+            <div class="product-metric"><strong>PRD</strong><span>需求洞察</span></div>
+            <div class="product-metric"><strong>Figma</strong><span>界面原型</span></div>
+            <div class="product-metric"><strong>Flow</strong><span>流程闭环</span></div>
+        </div>
+    </section>
+
+    <section class="product-files" aria-labelledby="product-files-title">
+        <div class="product-shell product-files-top"><span>Capability Files</span><span>04 records</span></div>
+        <div class="product-shell product-files-head">
+            <p class="product-in">四项能力对应一条完整工作链：发现问题、设计方案、理清流程、推动交付。</p>
+            <h2 class="product-in" id="product-files-title">复杂的问题，<br>拆成<em>能执行的方案</em>。</h2>
+        </div>
+        <div class="product-shell product-swap-hint">四项能力 · 一条完整工作链</div>
+
+        <div class="product-shell product-file-grid">
+            <article class="product-file product-in" id="product-file-1" data-no="01">
+                <div class="product-file-top"><span>01 / Insight</span><span>需求与功能规划</span></div>
+                <div class="product-file-icon"><i class="fa-solid fa-clipboard-list"></i></div>
+                <h3>需求与功能规划</h3>
+                <div class="product-summary"><i class="fa-solid fa-bolt"></i>我能做到：把分散反馈整理成清楚的问题与可执行的功能方案。</div>
+                <ul class="product-bullets">
+                    <li>主导<span class="highlight">多渠道反馈</span>梳理，深度挖掘业务逻辑与用户真实痛点，输出多条采纳级优化建议。</li>
+                    <li>深度参与产品功能迭代规划，提案获批上线后广受好评，成功<span class="highlight">驱动新用户增长</span>。</li>
+                    <li>精准拆解目标用户画像特征，通过调性匹配<span class="highlight">优化产品转化率</span>与契合度。</li>
+                </ul>
+                <div class="product-tags"><span>需求洞察</span><span>功能迭代</span><span>体验优化</span></div>
+            </article>
+
+            <article class="product-file product-in" id="product-file-2" data-no="02">
+                <div class="product-file-top"><span>02 / Figma</span><span>原型与界面搭建</span></div>
+                <div class="product-file-icon"><i class="fa-brands fa-figma"></i></div>
+                <h3>原型与界面搭建</h3>
+                <div class="product-summary"><i class="fa-solid fa-bolt"></i>我能做到：从信息架构、高保真界面到前后端联调独立推进。</div>
+                <ul class="product-bullets">
+                    <li><span class="highlight">独立全栈开发</span> Facebeauty 智能平台，跑通前后端闭环及后台管理端的数据模块化搭建。</li>
+                    <li>熟练使用 <span class="highlight">Figma</span> 设计信息架构与高保真产品界面，打造定制化的高互动用户体验。</li>
+                    <li>发挥数据优势，构建海量<span class="highlight">数据爬取</span>链路，直观呈现高交互与设计感的<span class="highlight">可视化图表</span>。</li>
+                </ul>
+                <div class="product-tags"><span>Figma</span><span>后台管理</span><span>全栈搭建</span></div>
+            </article>
+
+            <article class="product-file product-in" id="product-file-3" data-no="03">
+                <div class="product-file-top"><span>03 / Flow</span><span>业务流与状态梳理</span></div>
+                <div class="product-file-icon"><i class="fa-solid fa-diagram-project"></i></div>
+                <h3>业务流与状态梳理</h3>
+                <div class="product-summary"><i class="fa-solid fa-bolt"></i>我能做到：把复杂状态和业务节点拆成团队都能看懂的流程。</div>
+                <ul class="product-bullets">
+                    <li>精通 <span class="highlight">Xmind、draw.io</span> 等工具，快速梳理复杂业务流程节点与产品状态图，确保业务逻辑闭环。</li>
+                    <li>独立梳理 <span class="highlight">AI 特征匹配</span>路径与后端状态全链路，凭极高的完备度顺利跑通流程并获专家赞赏。</li>
+                    <li>通过<span class="highlight">数据监控机制</span>及时优化投放策略和操作流程，确保项目执行效率和转化效果持续提升。</li>
+                </ul>
+                <div class="product-tags"><span>Xmind</span><span>draw.io</span><span>业务流转</span></div>
+            </article>
+
+            <article class="product-file product-in" id="product-file-4" data-no="04">
+                <div class="product-file-top"><span>04 / Manage</span><span>项目推进与协作</span></div>
+                <div class="product-file-icon"><i class="fa-solid fa-list-check"></i></div>
+                <h3>项目推进与协作</h3>
+                <div class="product-summary"><i class="fa-solid fa-bolt"></i>我能做到：把时间、协作和交付节点放进同一套推进节奏。</div>
+                <ul class="product-bullets">
+                    <li>深度参与乐事、天气丹等标杆产品的<span class="highlight">全生命周期推广</span>，高效推动商务对接、合同拟定与交付。</li>
+                    <li>全量监控核心转化节点，跟进后台<span class="highlight">全链路流程</span>，沉淀标准化且高度可复用的<span class="highlight">运作 SOP</span>。</li>
+                    <li>负责采购推进与业务数据报表输出管理，锁定<span class="highlight">高 ROI 渠道</span>长效授权，最大化拉升跨部门协同效率。</li>
+                </ul>
+                <div class="product-tags"><span>SOP构建</span><span>进度把控</span><span>跨部门协同</span></div>
+            </article>
+        </div>
+        <div class="product-shell product-end"><button class="page-prev" type="button">← PREV / Data</button><button class="page-next" type="button">Next / FaceBeauty →</button></div>
+    </section>
+</div>
+
+<script>
+(() => {
+    const page = document.getElementById('productPage');
+    if (!page || page.dataset.productReady) return;
+    page.dataset.productReady = 'true';
+    const mobile = window.matchMedia('(max-width: 980px)').matches;
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+        });
+    }, { root: null, threshold: .12, rootMargin: '0px 0px -6% 0px' });
+    page.querySelectorAll('.product-in').forEach((item, index) => {
+        item.style.transitionDelay = Math.min((index % 4) * .055, .165) + 's';
+        observer.observe(item);
+    });
+    const files = [...page.querySelectorAll('.product-file')];
+    page.querySelectorAll('[data-target]').forEach(button => button.addEventListener('click', () => {
+        const target = page.querySelector('#' + button.dataset.target);
+        files.forEach(file => file.classList.toggle('is-active', file === target));
+        target?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }));
+    files.forEach(file => file.addEventListener('click', () => {
+        files.forEach(item => item.classList.toggle('is-active', item === file));
+    }));
+})();
+</script>
