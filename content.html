@@ -1189,14 +1189,14 @@
         renderViewer();
         viewer.classList.add('is-open');
         viewer.setAttribute('aria-hidden', 'false');
-        page.style.overflow = 'hidden';
+        document.documentElement.classList.add('pf-modal-open');
         viewer.querySelector('.content-viewer-close')?.focus();
     }
 
     function closeViewer() {
         viewer.classList.remove('is-open');
         viewer.setAttribute('aria-hidden', 'true');
-        page.style.overflow = '';
+        document.documentElement.classList.remove('pf-modal-open');
     }
 
     function stepViewer(step) {

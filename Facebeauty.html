@@ -323,6 +323,10 @@
     });
 
     const viewer = page.querySelector('#fbViewer');
+    /* Keep the fixed viewer outside the full-page wrapper. The wrapper uses
+       will-change on desktop, which otherwise turns a fixed dialog into a
+       document-height layer on mobile browsers. */
+    if (viewer && viewer.parentElement !== document.body) document.body.appendChild(viewer);
     const viewerImage = viewer.querySelector('img');
     const viewerTitle = viewer.querySelector('.fb-viewer-title');
     const viewerCount = viewer.querySelector('.fb-viewer-count');
@@ -336,8 +340,8 @@
         viewerTitle.textContent = source.alt;
         viewerCount.textContent = String(activeIndex + 1).padStart(2, '0') + ' / ' + shots.length;
     }
-    function openViewer(index) { showShot(index); viewer.classList.add('is-open'); viewer.setAttribute('aria-hidden','false'); page.style.overflow='hidden'; viewer.querySelector('.fb-viewer-close').focus(); }
-    function closeViewer() { viewer.classList.remove('is-open'); viewer.setAttribute('aria-hidden','true'); page.style.overflow=''; }
+    function openViewer(index) { showShot(index); viewer.classList.add('is-open'); viewer.setAttribute('aria-hidden','false'); document.documentElement.classList.add('pf-modal-open'); viewer.querySelector('.fb-viewer-close').focus(); }
+    function closeViewer() { viewer.classList.remove('is-open'); viewer.setAttribute('aria-hidden','true'); document.documentElement.classList.remove('pf-modal-open'); }
     page.querySelectorAll('.fb-shot').forEach(shot => shot.addEventListener('click', () => {
         if (shot.closest('.fb-film-row')?.dataset.dragMoved === 'true') return;
         openViewer(Number(shot.dataset.viewerIndex));

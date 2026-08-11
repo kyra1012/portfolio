@@ -86,6 +86,21 @@
             });
         };
 
+        /* Phones and tablets use a stable document flow. Complex reveal and
+           sticky effects are reserved for desktop so restored scroll positions,
+           browser chrome resizing and touch scrolling cannot leave blank areas. */
+        if (window.innerWidth <= 980) {
+            staticReveal();
+            const mobileSectionObserver = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) setCurrent(sections.indexOf(entry.target));
+                });
+            }, { rootMargin: '-38% 0px -38% 0px' });
+            sections.forEach(section => mobileSectionObserver.observe(section));
+            setCurrent(0);
+            return;
+        }
+
         if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
             staticReveal();
             const sectionObserver = new IntersectionObserver(entries => {

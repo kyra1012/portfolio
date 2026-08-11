@@ -2136,3 +2136,517 @@ html.pf-continuous .content-concept-caption span {
     .content-workflow-line > span { min-height:92px; }
     .content-workflow-line b { font-size:15px; }
 }
+
+/* --------------------------------------------------------------------------
+   Responsive document flow
+   Desktop keeps the editorial composition; touch devices get stable layouts.
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 980px) {
+    :root { --pf-mobile-gutter: clamp(20px,5.4vw,36px); }
+
+    html.pf-continuous,
+    html.pf-continuous body {
+        width: 100% !important;
+        min-width: 0 !important;
+        overflow-x: clip !important;
+        scroll-behavior: smooth;
+    }
+
+    html.pf-continuous body {
+        background-attachment: scroll !important;
+        -webkit-text-size-adjust: 100%;
+        text-size-adjust: 100%;
+    }
+
+    html.pf-continuous #fullpage-wrapper,
+    html.pf-continuous .page-section,
+    html.pf-continuous :is(.me-page,.data-page,.product-page,.fb-page,.growth-page,.content-page) {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        height: auto !important;
+        min-height: 0 !important;
+        margin: 0 !important;
+        padding-top: 0 !important;
+        overflow: visible !important;
+    }
+
+    html.pf-continuous .page-section:not(.section-1) {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+    }
+
+    html.pf-continuous :is(img,video,canvas,svg) { max-width: 100%; }
+    html.pf-continuous :is(p,li,dd,b,strong,span) { overflow-wrap: anywhere; }
+
+    html.pf-continuous :is(
+        .me-shell,.data-archive-shell,.product-shell,.fb-shell,.content-shell
+    ) {
+        width: min(calc(100% - (var(--pf-mobile-gutter) * 2)),720px) !important;
+        max-width: 720px !important;
+        margin-inline: auto !important;
+    }
+
+    html.pf-continuous :is(
+        .page-nav-dots,.pf-page-status,.page-header-text,.pf-seam-flow,
+        .growth-sticky-chrome,.content-progress
+    ) { display: none !important; }
+
+    /* Mobile never depends on scroll-triggered opacity or clipped text. */
+    html.pf-continuous :is(
+        .reveal,.pf-reveal,.me-in,.product-in,.fb-in,.g-reveal,.c-in,
+        .pf-card-reveal,.pf-text-reveal,.growth-display-line > span,
+        .content-title-mask > span
+    ) {
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: none !important;
+        clip-path: none !important;
+        transition-delay: 0s !important;
+    }
+
+    html.pf-continuous :is(
+        .data-card,.product-file,.fb-video-card,.fb-stat,.growth-step-card,
+        .growth-proof-card,.content-work,.content-proof-card
+    ) {
+        animation: none !important;
+        transform: none !important;
+    }
+
+    html.pf-continuous :is(button,[role="button"],a) {
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: rgba(80,101,89,.12);
+    }
+
+    /* Cover: use the letter as a responsive paper card instead of animating a
+       fixed 500px envelope beyond the viewport. */
+    html.pf-continuous .page-section.section-1 {
+        height: auto !important;
+        min-height: 100svh !important;
+        padding: max(42px,env(safe-area-inset-top)) var(--pf-mobile-gutter)
+                 max(42px,env(safe-area-inset-bottom)) !important;
+        overflow: hidden !important;
+    }
+
+    html.pf-continuous .section-1 .split-layout {
+        width: 100% !important;
+        min-height: calc(100svh - 84px) !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        gap: 28px !important;
+        padding: 0 !important;
+    }
+
+    html.pf-continuous .section-1 .right-pane {
+        order: -1;
+        flex: 0 0 auto !important;
+        width: 100% !important;
+        padding: 0 !important;
+        align-items: center !important;
+        text-align: center;
+    }
+
+    html.pf-continuous .section-1 .left-pane {
+        flex: 0 0 auto !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        perspective: none !important;
+    }
+
+    html.pf-continuous .section-1 .art-title {
+        margin: 0 !important;
+        font-size: clamp(36px,11vw,58px) !important;
+        letter-spacing: .14em !important;
+    }
+
+    html.pf-continuous .section-1 .art-ornament { margin-top: 14px !important; }
+    html.pf-continuous .section-1 :is(.envelope-back,.flap-base,.flap-top-hinge,.seal-img) { display: none !important; }
+
+    html.pf-continuous .section-1 .envelope-wrapper,
+    html.pf-continuous .section-1 .envelope-wrapper.open {
+        width: min(100%,430px) !important;
+        height: auto !important;
+        animation: none !important;
+        transform: none !important;
+        filter: none !important;
+    }
+
+    html.pf-continuous .section-1 .envelope-wrapper.open .letter,
+    html.pf-continuous .section-1 .letter {
+        position: relative !important;
+        inset: auto !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: 470px !important;
+        overflow: hidden !important;
+        border-radius: 26px !important;
+        animation: none !important;
+        transform: none !important;
+        box-shadow: 0 24px 60px rgba(77,65,51,.13) !important;
+    }
+
+    html.pf-continuous .section-1 .letter-content,
+    html.pf-continuous .section-1 .envelope-wrapper.open .letter-content {
+        position: relative !important;
+        inset: auto !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: 470px !important;
+        padding: 64px 26px 42px !important;
+        animation: none !important;
+        transform: none !important;
+    }
+
+    html.pf-continuous .section-1 .letter p { font-size: 15px !important; line-height: 1.82 !important; }
+    html.pf-continuous .section-1 .btn-accept { min-height: 44px; margin-top: 26px !important; }
+
+    /* About */
+    html.pf-continuous .me-topline { padding: 24px 0 0 !important; gap: 18px !important; }
+    html.pf-continuous .me-hero {
+        grid-template-columns: 1fr !important;
+        gap: 48px !important;
+        padding: 52px 0 54px !important;
+    }
+    html.pf-continuous .me-portrait-wrap { width: min(76vw,360px) !important; }
+    html.pf-continuous .me-name {
+        font-size: clamp(58px,18vw,92px) !important;
+        line-height: .9 !important;
+        overflow-wrap: normal !important;
+    }
+    html.pf-continuous .me-role { font-size: 12px !important; letter-spacing: .16em !important; }
+    html.pf-continuous .me-statement { max-width: 40rem !important; font-size: 16px !important; }
+    html.pf-continuous .me-info-grid { grid-template-columns: repeat(2,minmax(0,1fr)) !important; gap: 10px !important; }
+    html.pf-continuous .me-info { min-width: 0; padding: 16px !important; }
+    html.pf-continuous .me-info b { word-break: break-word; }
+    html.pf-continuous .me-directory { padding: 78px 0 88px !important; }
+    html.pf-continuous .me-directory-head { grid-template-columns: 1fr !important; gap: 22px !important; margin-bottom: 34px !important; }
+    html.pf-continuous .me-directory-head h2 { font-size: clamp(42px,12vw,64px) !important; line-height: 1.02 !important; }
+    html.pf-continuous .me-core-grid { grid-template-columns: 1fr !important; gap: 14px !important; padding: 0 !important; }
+    html.pf-continuous .me-core-card { min-height: 0 !important; padding: 28px 24px !important; }
+    html.pf-continuous .me-core-card h3 { font-size: 28px !important; }
+    html.pf-continuous .me-platform-grid { grid-template-columns: repeat(2,minmax(0,1fr)) !important; gap: 10px !important; }
+    html.pf-continuous .me-platform { min-height: 48px !important; }
+    html.pf-continuous .me-tool-layout { grid-template-columns: 1fr !important; gap: 28px !important; }
+    html.pf-continuous .me-tool-group { grid-template-columns: 1fr !important; gap: 12px !important; }
+
+    /* Data: replace desktop absolute collage with a readable card sequence. */
+    html.pf-continuous .data-stage {
+        height: auto !important;
+        min-height: 0 !important;
+        padding: 84px var(--pf-mobile-gutter) 76px !important;
+        overflow: hidden !important;
+    }
+    html.pf-continuous :is(.data-copy,.core-section-header,.skill-list,.tree-scene,.floating-sentence,.watermark) {
+        position: relative !important;
+        inset: auto !important;
+        width: 100% !important;
+        max-width: 720px !important;
+        margin-inline: auto !important;
+    }
+    html.pf-continuous .data-copy { top: auto !important; left: auto !important; }
+    html.pf-continuous .data-copy .kicker { margin-bottom: 20px !important; font-size: 10px !important; letter-spacing: .28em !important; }
+    html.pf-continuous .data-copy h1 { font-size: clamp(58px,17vw,90px) !important; line-height: .9 !important; }
+    html.pf-continuous .core-section-header { margin-top: 58px !important; }
+    html.pf-continuous .core-title { font-size: clamp(34px,9vw,52px) !important; }
+    html.pf-continuous .skill-list { margin-top: 16px !important; bottom: auto !important; }
+    html.pf-continuous .skill-item { padding: 18px 0 !important; }
+    html.pf-continuous .skill-item strong { font-size: 22px !important; }
+    html.pf-continuous .skill-item span { font-size: 16px !important; line-height: 1.72 !important; }
+    html.pf-continuous .tree-scene {
+        inset: auto !important;
+        display: grid !important;
+        grid-template-columns: repeat(2,minmax(0,1fr)) !important;
+        gap: 16px !important;
+        margin-top: 38px !important;
+        pointer-events: auto !important;
+    }
+    html.pf-continuous :is(.tree-art-img,.bird-group,.floating-sentence) { display: none !important; }
+    html.pf-continuous .watermark {
+        position: absolute !important;
+        right: -4vw !important;
+        bottom: 0 !important;
+        left: auto !important;
+        width: auto !important;
+        font-size: 24vw !important;
+    }
+    html.pf-continuous .data-card,
+    html.pf-continuous .data-card:nth-child(n) {
+        position: relative !important;
+        inset: auto !important;
+        width: auto !important;
+        min-width: 0 !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        padding: 22px !important;
+        border-radius: 22px !important;
+    }
+    html.pf-continuous .data-card h2 { font-size: 26px !important; }
+    html.pf-continuous .data-card p { font-size: 15px !important; line-height: 1.72 !important; }
+    html.pf-continuous .data-archive { padding: 76px 0 84px !important; }
+    html.pf-continuous .data-archive-head { grid-template-columns: 1fr !important; gap: 22px !important; padding: 36px 0 42px !important; }
+    html.pf-continuous .data-archive-head h2 { font-size: clamp(42px,11vw,64px) !important; }
+    html.pf-continuous .data-case { grid-template-columns: 36px minmax(0,1fr) !important; gap: 14px !important; padding: 24px 10px !important; }
+    html.pf-continuous .data-case-title { grid-column: 2 !important; }
+    html.pf-continuous .data-case dl,
+    html.pf-continuous .data-case-result { grid-column: 2 !important; justify-self: start !important; text-align: left !important; }
+    html.pf-continuous .data-case h3 { font-size: 25px !important; }
+    html.pf-continuous .data-case dd { font-size: 15px !important; }
+    html.pf-continuous .data-pipeline { grid-template-columns: repeat(2,minmax(0,1fr)) !important; gap: 12px !important; }
+    html.pf-continuous .data-pipeline-item { min-height: 120px !important; padding: 18px !important; }
+
+    /* Product: details stay visible on touch; hover overlays are desktop-only. */
+    html.pf-continuous .product-cover { min-height: 0 !important; padding: 28px 0 68px !important; }
+    html.pf-continuous .product-hero { grid-template-columns: 1fr !important; gap: 38px !important; padding: 54px 0 34px !important; }
+    html.pf-continuous .product-title { font-size: clamp(56px,17vw,88px) !important; line-height: .92 !important; }
+    html.pf-continuous .product-title em { padding-left: .24em !important; }
+    html.pf-continuous .product-subtitle { font-size: 17px !important; }
+    html.pf-continuous .product-desc { font-size: 16px !important; }
+    html.pf-continuous .product-index { margin-top: 8px !important; }
+    html.pf-continuous .product-index-row { min-height: 64px !important; }
+    html.pf-continuous .product-metrics { grid-template-columns: repeat(3,minmax(0,1fr)) !important; gap: 8px !important; }
+    html.pf-continuous .product-metric { min-width: 0; min-height: 76px !important; padding: 13px !important; display: grid !important; align-content: space-between; }
+    html.pf-continuous .product-metric strong { font-size: 24px !important; }
+    html.pf-continuous .product-metric span { font-size: 9px !important; }
+    html.pf-continuous .product-files { min-height: 0 !important; padding: 76px 0 84px !important; }
+    html.pf-continuous .product-files-head { grid-template-columns: 1fr !important; gap: 20px !important; padding: 0 0 34px !important; }
+    html.pf-continuous .product-files-head h2 { font-size: clamp(42px,11vw,62px) !important; }
+    html.pf-continuous .product-swap-hint { margin: 0 0 22px !important; }
+    html.pf-continuous .product-file-grid { grid-template-columns: 1fr !important; grid-template-rows: auto !important; gap: 16px !important; }
+    html.pf-continuous .product-file,
+    html.pf-continuous .product-file.is-active {
+        min-height: 0 !important;
+        height: auto !important;
+        padding: 26px 22px !important;
+        transform: none !important;
+    }
+    html.pf-continuous .product-file-icon { margin: 28px 0 18px !important; }
+    html.pf-continuous .product-file h3 { font-size: 32px !important; }
+    html.pf-continuous .product-summary { max-width: none !important; font-size: 16px !important; }
+    html.pf-continuous .product-bullets {
+        position: relative !important;
+        inset: auto !important;
+        margin: 0 !important;
+        padding: 0 0 0 20px !important;
+        gap: 12px !important;
+        color: #394941 !important;
+        background: transparent !important;
+        -webkit-backdrop-filter: none !important;
+        backdrop-filter: none !important;
+        font-size: 16px !important;
+        line-height: 1.72 !important;
+        opacity: 1 !important;
+        clip-path: none !important;
+        transform: none !important;
+        pointer-events: auto !important;
+    }
+    html.pf-continuous .product-tags { margin-top: 24px !important; }
+
+    /* FaceBeauty */
+    html.pf-continuous .fb-hero { min-height: 0 !important; padding: 28px 0 72px !important; overflow: hidden !important; }
+    html.pf-continuous .fb-hero-grid { grid-template-columns: 1fr !important; gap: 42px !important; padding: 54px 0 0 !important; }
+    html.pf-continuous .fb-title { font-size: clamp(62px,18vw,92px) !important; }
+    html.pf-continuous .fb-intro { font-size: 16px !important; }
+    html.pf-continuous .fb-highlight { grid-template-columns: 28px minmax(0,1fr) !important; font-size: 15px !important; }
+    html.pf-continuous .fb-video-card { width: 100% !important; transform: none !important; border-radius: 22px !important; }
+    html.pf-continuous .fb-video-wrapper { border-radius: 17px !important; }
+    html.pf-continuous .fb-video-play { width: min(86%,300px) !important; }
+    html.pf-continuous .fb-speed-controls { gap: 8px !important; }
+    html.pf-continuous .fb-speed-btn { min-width: 44px !important; min-height: 44px !important; font-size: 10px !important; }
+    html.pf-continuous .fb-hero-stats { width: 100% !important; grid-template-columns: repeat(2,minmax(0,1fr)) !important; margin: 28px auto 0 !important; }
+    html.pf-continuous .fb-stat:nth-child(n) { transform: none !important; }
+    html.pf-continuous .fb-gallery { min-height: 0 !important; padding: 76px 0 84px !important; }
+    html.pf-continuous .fb-gallery-head { grid-template-columns: 1fr !important; gap: 22px !important; padding: 0 0 36px !important; }
+    html.pf-continuous .fb-gallery-head h2 { font-size: clamp(42px,11vw,62px) !important; }
+    html.pf-continuous .fb-film-row,
+    html.pf-continuous .fb-film-row:nth-child(2) { width: 100% !important; margin-left: 0 !important; }
+    html.pf-continuous .fb-film-row { touch-action: pan-x !important; }
+    html.pf-continuous .fb-shot { height: 190px !important; }
+    html.pf-continuous .fb-viewer { grid-template-rows: 62px minmax(0,1fr) 54px !important; }
+    html.pf-continuous .fb-viewer-stage { padding: 10px 50px !important; }
+    html.pf-continuous .fb-viewer-nav { width: 44px !important; height: 44px !important; }
+    html.pf-continuous .fb-viewer-prev { left: 4px !important; }
+    html.pf-continuous .fb-viewer-next { right: 4px !important; }
+
+    /* Growth */
+    html.pf-continuous .growth-shell { width: 100% !important; overflow: hidden !important; }
+    html.pf-continuous .growth-hero {
+        min-height: 0 !important;
+        grid-template-columns: 1fr !important;
+        gap: 36px !important;
+        padding: 92px var(--pf-mobile-gutter) 72px !important;
+    }
+    html.pf-continuous .growth-display { font-size: clamp(50px,14vw,76px) !important; }
+    html.pf-continuous .growth-display-line:nth-child(2) { margin-left: 0 !important; }
+    html.pf-continuous .growth-hero-desc { max-width: 42rem !important; padding-left: 18px !important; font-size: 16px !important; }
+    html.pf-continuous .growth-evidence-strip { grid-template-columns: repeat(3,minmax(0,1fr)) !important; }
+    html.pf-continuous .growth-evidence { min-width: 0 !important; padding-inline: 12px !important; }
+    html.pf-continuous .growth-hero-visual { min-height: 390px !important; }
+    html.pf-continuous .growth-orbit-map { width: min(78vw,350px) !important; }
+    html.pf-continuous .growth-orbit-node { min-width: 76px !important; padding: 9px 10px !important; font-size: 8px !important; }
+    html.pf-continuous .growth-orbit-node { min-height: 44px !important; }
+    html.pf-continuous .growth-section { padding: 82px var(--pf-mobile-gutter) !important; }
+    html.pf-continuous .growth-section-head,
+    html.pf-continuous .growth-system-layout { grid-template-columns: 1fr !important; gap: 28px !important; }
+    html.pf-continuous .growth-section-title,
+    html.pf-continuous .growth-system-copy .growth-section-title { font-size: clamp(42px,11vw,62px) !important; }
+    html.pf-continuous .growth-case-stage { min-height: 0 !important; padding: 8px !important; }
+    html.pf-continuous .growth-case-tabs { width: 100% !important; }
+    html.pf-continuous .growth-case-tab { min-height: 52px !important; }
+    html.pf-continuous .growth-case-panel { min-height: 0 !important; grid-template-columns: 1fr !important; gap: 28px !important; padding: 34px 18px 22px !important; }
+    html.pf-continuous .growth-case-name { font-size: 30px !important; }
+    html.pf-continuous .growth-flow-item { grid-template-columns: 42px minmax(0,1fr) !important; gap: 12px !important; }
+    html.pf-continuous .growth-flow-label,
+    html.pf-continuous .growth-flow-content { grid-column: 2 !important; }
+    html.pf-continuous .growth-system { min-height: 0 !important; }
+    html.pf-continuous .growth-system-layout,
+    html.pf-continuous .growth-steps-stack { min-height: 0 !important; }
+    html.pf-continuous .growth-system-copy { position: relative !important; top: auto !important; }
+    html.pf-continuous .growth-step-card {
+        position: relative !important;
+        top: auto !important;
+        min-height: 0 !important;
+        margin: 0 0 16px !important;
+        padding: 24px 20px !important;
+    }
+    html.pf-continuous .growth-step-top { align-items: flex-start !important; gap: 8px !important; }
+    html.pf-continuous .growth-step-signal { text-align: right; }
+    html.pf-continuous .growth-proof-grid { grid-template-columns: 1fr !important; }
+    html.pf-continuous .growth-proof-card:nth-child(n) { grid-column: auto !important; min-height: 0 !important; }
+    html.pf-continuous .growth-ending { min-height: 0 !important; padding: 92px var(--pf-mobile-gutter) 96px !important; }
+    html.pf-continuous .growth-ending h2 { font-size: clamp(42px,11vw,62px) !important; }
+
+    /* Content: show all projects as a vertical list instead of requiring drag. */
+    html.pf-continuous .content-hero { min-height: 0 !important; padding: 28px 0 64px !important; }
+    html.pf-continuous .content-hero-stage { grid-template-columns: 1fr !important; gap: 36px !important; padding: 64px 0 42px !important; }
+    html.pf-continuous .content-hero h1 { font-size: clamp(52px,14vw,76px) !important; }
+    html.pf-continuous .content-title-mask:nth-child(2) { padding-left: 0 !important; }
+    html.pf-continuous .content-hero-aside { padding: 24px !important; }
+    html.pf-continuous .content-hero-aside p { font-size: 16px !important; }
+    html.pf-continuous .content-capability-row { grid-template-columns: 30px 1fr auto !important; min-height: 58px !important; }
+    html.pf-continuous .content-capability-row:nth-child(n) { margin-inline: 0 !important; }
+    html.pf-continuous .content-hero-foot { grid-template-columns: repeat(2,minmax(0,1fr)) !important; gap: 10px !important; }
+    html.pf-continuous .content-stat { min-width: 0; min-height: 94px !important; }
+    html.pf-continuous .content-gallery { padding: 76px 0 84px !important; }
+    html.pf-continuous .content-gallery-head { grid-template-columns: 1fr !important; gap: 20px !important; }
+    html.pf-continuous .content-gallery-head h2 { font-size: clamp(42px,11vw,62px) !important; }
+    html.pf-continuous :is(.content-reel-controls,.content-reel-hint) { display: none !important; }
+    html.pf-continuous .content-reel-wrap { width: 100% !important; max-width: 100% !important; overflow: visible !important; }
+    html.pf-continuous .content-reel {
+        width: min(calc(100% - (var(--pf-mobile-gutter) * 2)),720px) !important;
+        max-width: 720px !important;
+        margin: 32px auto 0 !important;
+        padding: 0 !important;
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+        overflow: visible !important;
+        scroll-snap-type: none !important;
+        transform: none !important;
+        touch-action: pan-y !important;
+    }
+    html.pf-continuous .content-work {
+        width: 100% !important;
+        min-width: 0 !important;
+        min-height: 0 !important;
+        flex-basis: auto !important;
+        grid-template-columns: 1fr !important;
+        border-radius: 24px !important;
+    }
+    html.pf-continuous .content-work-visual { min-height: 0 !important; aspect-ratio: 4/3; border-radius: 24px 24px 0 0 !important; }
+    html.pf-continuous .content-work-info { min-height: 0 !important; padding: 26px 22px 30px !important; }
+    html.pf-continuous .content-work h3 { margin: 30px 0 14px !important; font-size: 34px !important; }
+    html.pf-continuous .content-open-project { min-height: 44px !important; margin-top: 26px !important; }
+    html.pf-continuous .content-proof { padding: 78px 0 84px !important; }
+    html.pf-continuous .content-proof-title { grid-template-columns: 1fr !important; gap: 20px !important; }
+    html.pf-continuous .content-proof-grid { grid-template-columns: repeat(2,minmax(0,1fr)) !important; }
+    html.pf-continuous .content-proof-card { min-height: 0 !important; padding: 22px !important; }
+    html.pf-continuous .content-ending { min-height: 70svh !important; padding-inline: var(--pf-mobile-gutter) !important; }
+    html.pf-continuous .content-ending h2 { font-size: clamp(42px,11vw,62px) !important; }
+    html.pf-continuous .content-viewer {
+        grid-template-columns: 44px minmax(0,1fr) 44px !important;
+        grid-template-rows: 60px minmax(0,1fr) 52px !important;
+    }
+    html.pf-continuous .content-viewer-stage { margin: 8px 0 !important; }
+    html.pf-continuous .content-viewer-close { width: 44px !important; height: 44px !important; }
+    html.pf-continuous .content-viewer-note { padding: 26px 18px !important; }
+    html.pf-continuous .content-viewer-note h3 { font-size: clamp(34px,10vw,50px) !important; }
+}
+
+html.pf-modal-open,
+html.pf-modal-open body {
+    overflow: hidden !important;
+    overscroll-behavior: none !important;
+}
+
+@media (max-width: 620px) {
+    html.pf-continuous :is(.product-topline,.fb-topline,.me-topline) {
+        align-items: flex-start !important;
+        font-size: 8px !important;
+        letter-spacing: .12em !important;
+    }
+
+    html.pf-continuous .me-info-grid { grid-template-columns: 1fr !important; }
+    html.pf-continuous .me-life-photo { width: 86px !important; right: -8px !important; bottom: -24px !important; }
+
+    html.pf-continuous .tree-scene { grid-template-columns: 1fr !important; }
+    html.pf-continuous .data-pipeline { grid-template-columns: 1fr !important; }
+
+    html.pf-continuous .product-metrics { grid-template-columns: 1fr !important; }
+    html.pf-continuous .product-metric { min-height: 64px !important; grid-template-columns: auto 1fr !important; align-items: center !important; gap: 14px !important; }
+    html.pf-continuous .product-file-top { gap: 12px !important; font-size: 9px !important; }
+
+    html.pf-continuous .fb-video-head { left: 14px !important; right: 14px !important; top: 14px !important; font-size: 8px !important; }
+    html.pf-continuous .fb-video-play-copy small { display: none; }
+    html.pf-continuous .fb-film-legend { gap: 6px !important; }
+    html.pf-continuous .fb-film-legend span { font-size: 9px !important; }
+
+    html.pf-continuous .growth-evidence-strip { grid-template-columns: 1fr !important; }
+    html.pf-continuous .growth-evidence,
+    html.pf-continuous .growth-evidence + .growth-evidence { padding: 14px 0 !important; border-left: 0 !important; border-top: 1px solid var(--growth-line) !important; }
+    html.pf-continuous .growth-evidence:first-child { border-top: 0 !important; }
+    html.pf-continuous .growth-hero-visual { min-height: 330px !important; }
+    html.pf-continuous .growth-orbit-map { width: min(76vw,292px) !important; }
+    html.pf-continuous .growth-orbit-node { min-width: 66px !important; padding: 7px 8px !important; font-size: 7px !important; }
+    html.pf-continuous .growth-case-tabs { grid-template-columns: 1fr !important; }
+    html.pf-continuous .growth-step-top { display: grid !important; }
+    html.pf-continuous .growth-step-signal { text-align: left !important; }
+    html.pf-continuous .growth-proof-list { grid-template-columns: 1fr !important; }
+
+    html.pf-continuous .content-capability-row { grid-template-columns: 28px minmax(0,1fr) !important; }
+    html.pf-continuous .content-capability-row em { display: none !important; }
+    html.pf-continuous .content-hero-foot,
+    html.pf-continuous .content-proof-grid { grid-template-columns: 1fr !important; }
+    html.pf-continuous .content-workflow-line { grid-template-columns: repeat(2,minmax(0,1fr)) !important; }
+    html.pf-continuous .content-workflow-line > span { min-height: 92px !important; }
+    html.pf-continuous .content-live-stage { grid-template-columns: 1fr !important; }
+    html.pf-continuous .content-live-stage::before,
+    html.pf-continuous .content-live-signal { display: none !important; }
+    html.pf-continuous .content-live-quote:nth-child(n) { transform: none !important; }
+}
+
+@media (max-width: 420px) {
+    :root { --pf-mobile-gutter: 18px; }
+    html.pf-continuous .section-1 .letter-content { padding-inline: 20px !important; }
+    html.pf-continuous .me-name { font-size: 56px !important; }
+    html.pf-continuous .data-stage { padding-inline: 18px !important; }
+    html.pf-continuous .product-title { font-size: 54px !important; }
+    html.pf-continuous .fb-title { font-size: 60px !important; }
+    html.pf-continuous .growth-display { font-size: 48px !important; }
+    html.pf-continuous .content-hero h1 { font-size: 50px !important; }
+}
+
+@media (max-width: 980px) and (orientation: landscape) {
+    html.pf-continuous .page-section.section-1 { min-height: 0 !important; }
+    html.pf-continuous .section-1 .split-layout { min-height: 0 !important; }
+    html.pf-continuous .section-1 .letter { max-width: 620px !important; }
+    html.pf-continuous .growth-hero-visual { min-height: 320px !important; }
+}
+
+@media (hover: none) and (pointer: coarse) {
+    html.pf-continuous :is(
+        .me-core-card,.data-card,.data-case,.product-file,.fb-video-card,.fb-shot,
+        .growth-proof-card,.content-work,.content-proof-card
+    ):hover { transform: none !important; }
+}
